@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>R&K serie's</title>
+<style>
+html, body {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-family: Arial, sans-serif;
+  background: #222;
+}
+.ventana-secreta {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.95);
+  color: #9cff9c;
+  font-family: "Courier New", monospace;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  z-index: 200;
+  padding: 40px;
+}
+
+.ventana-box {
+  max-width: 600px;
+}
+
+.cerrar {
+  position: absolute;
+  top: 20px;
+  right: 25px;
+  cursor: pointer;
+  font-size: 22px;
+}
+
+#fondo {
+  position: fixed;
+  inset: 0;
+  background-image: url("https://i.imgur.com/HCLWyvj.png");
+  background-size: cover;
+  background-position: center;
+  filter: hue-rotate(0deg);
+  animation: colores 20s linear infinite;
+}
+
+@keyframes colores {
+  from { filter: hue-rotate(0deg); }
+  to { filter: hue-rotate(360deg); }
+}
+
+/* BOTONES PRINCIPALES */
+#botones {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
+  z-index: 20;
+}
+
+button {
+  padding: 10px 18px;
+  border-radius: 15px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  background: #7CFF9B;
+  transition: 0.2s;
+}
+
+button:hover { transform: scale(1.1); }
+button:active { background: #55cc7a; }
+
+/* BOTONES EDICIÓN */
+#fondoEditor, #personajeEditor, #guardarPersonaje {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: none;
+  gap: 10px;
+  z-index: 20;
+}
+
+/* PERSONAJES FLOTANTES */
+.personaje {
+  position: absolute;
+  width: 120px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.personaje:hover { transform: scale(1.1); }
+.nombre {
+  position: absolute;
+  bottom: 125px;
+  left: 0;
+  width: 120px;
+  text-align: center;
+  color: white;
+  font-weight: bold;
+  text-shadow: 1px 1px 4px black;
+  pointer-events: none;
+}
+
+/* OVERLAY PERFIL */
+#perfilOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 50;
+}
+
+#perfilBox {
+  background: white;
+  padding: 30px;
+  border-radius: 20px;
+  text-align: center;
+}
+
+.perfilBtn {
+  padding: 15px 30px;
+  margin: 10px;
+  border: none;
+  border-radius: 15px;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+#glen { background: #7CFF9B; }
+#oliver { background: #FFA94D; }
+</style>
+</head>
+<body>
+
+<div id="fondo"></div>
+
+<!-- OVERLAY PERFIL -->
+<div id="perfilOverlay">
+  <div id="perfilBox">
+    <h2>¿Quién eres?</h2>
+    <button id="glen" class="perfilBtn" onclick="elegirPerfil('glen')">Glen</button>
+    <button id="oliver" class="perfilBtn" onclick="elegirPerfil('oliver')">Oliver</button>
+  </div>
+</div>
+
+<!-- BOTONES PRINCIPALES -->
+<div id="botones">
+  <button onclick="modoMusica()">Agregar música</button>
+  <button onclick="modoAgregarPersonajes()">Agregar personajes</button>
+  <button onclick="modoEditarFondo()">Editar fondo</button>
+  <button onclick="modoEditarPersonajes()">Editar personajes</button>
+</div>
+
+<!-- BOTONES EDICIÓN FONDO -->
+<div id="fondoEditor">
+  <button onclick="agregarElementoFondo()">Agregar elemento</button>
+  <button onclick="guardarFondo()">Guardar</button>
+</div>
+
+<!-- BOTONES EDICIÓN PERSONAJES -->
+<div id="personajeEditor">
+  <button onclick="guardarPersonajes()">Guardar cambios</button>
+</div>
+
+<!-- BOTÓN GUARDAR PERSONAJE NUEVO -->
+<div id="guardarPersonaje">
+  <button onclick="guardarNuevoPersonaje()">Guardar</button>
+</div>
+
+<!-- INPUTS OCULTOS -->
+<input type="file" id="musicInput" accept="audio/*" hidden>
+<input type="file" id="imgInput" accept="image/png" hidden>
+<input type="file" id="elementoFondoInput" accept="image/png" hidden>
+<input type="file" id="soundInput" accept="audio/*" hidden>
+
+<script>
+let perfil = "oliver";
+
+window.onload = () => {
+  const overlay = document.getElementById("perfilOverlay");
+  if (overlay) overlay.remove();
+
+  document.getElementById("botones").style.display = "none";
+};
+
+let audios = [];
+let personajes = [];
+let agregandoPersonaje = false;
+
+// --- PERFIL ---
+function elegirPerfil(p) {
+  perfil = p;
+  document.getElementById("perfilOverlay").style.display = "none";
+  if(perfil === "glen") document.getElementById("botones").style.display = "flex";
+  else document.getElementById("botones").style.display = "none";
+}
+
+// --- MÚSICA ---
+function modoMusica() { if(perfil !== "glen") return; document.getElementById("musicInput").click(); }
+document.getElementById("musicInput").onchange = e => {
+  const audio = new Audio(URL.createObjectURL(e.target.files[0]));
+  audio.loop = true;
+  audio.play();
+  audios.push(audio);
+}
+
+// --- AGREGAR PERSONAJES ---
+function modoAgregarPersonajes() {
+  if(perfil !== "glen") return;
+  agregandoPersonaje = true;
+  ocultarBotones(true);
+
+  const addBtn = document.createElement("button");
+  addBtn.id = "agregarPersonajeBtn";
+  addBtn.textContent = "+";
+  addBtn.style.position = "fixed";
+  addBtn.style.bottom = "80px";
+  addBtn.style.left = "40%";
+  addBtn.style.transform = "translateX(-50%)";
+  addBtn.style.zIndex = 20;
+  addBtn.onclick = () => document.getElementById("imgInput").click();
+  document.body.appendChild(addBtn);
+
+  document.getElementById("guardarPersonaje").style.display = "flex";
+}
+
+// Evitar que un nuevo personaje aparezca encima de otro
+function getPosicionLibre() {
+  let left, top, intento=0;
+  do {
+    left = Math.random()*70;
+    top = Math.random()*60;
+    intento++;
+    let choca = personajes.some(p => {
+      const dx = left - parseFloat(p.element.style.left);
+      const dy = top - parseFloat(p.element.style.top);
+      return Math.sqrt(dx*dx + dy*dy) < 20;
+    });
+    if(!choca) break;
+  } while(intento<100);
+  return {left, top};
+}
+
+document.getElementById("imgInput").onchange = e => {
+  const file = e.target.files[0];
+  const img = document.createElement("img");
+  img.src = URL.createObjectURL(file);
+  img.className = "personaje";
+
+  const pos = getPosicionLibre();
+  img.style.left = pos.left + "%";
+  img.style.top = pos.top + "%";
+
+  const sonido = new Audio();
+  const vel = {vx: (Math.random()*0.5-0.25), vy: (Math.random()*0.5-0.25)};
+  img.vel = vel;
+  img.onclick = () => { if(sonido) sonido.play(); };
+
+  const tiempoCreacion = Date.now();
+  document.body.appendChild(img);
+  personajes.push({element: img, sonido: sonido, nombre: "", vel: vel, label: null, controls: null, tiempoCreacion});
+}
+
+// --- GUARDAR NUEVO PERSONAJE ---
+function guardarNuevoPersonaje() {
+  agregandoPersonaje = false;
+  document.getElementById("guardarPersonaje").style.display = "none";
+  const addBtn = document.getElementById("agregarPersonajeBtn");
+  if(addBtn) addBtn.remove();
+  ocultarBotones(false);
+}
+
+// --- FONDO ---
+function modoEditarFondo() { if(perfil !== "glen") return; ocultarBotones(true); document.getElementById("fondoEditor").style.display = "flex"; }
+function agregarElementoFondo() { document.getElementById("elementoFondoInput").click(); }
+document.getElementById("elementoFondoInput").onchange = e => {
+  const file = e.target.files[0];
+  const img = document.createElement("img");
+  img.src = URL.createObjectURL(file);
+  img.style.position = "absolute";
+  img.style.left = "50%";
+  img.style.top = "50%";
+  img.style.transform = "translate(-50%, -50%)";
+  img.style.pointerEvents = "none";
+  document.body.appendChild(img);
+}
+function guardarFondo() { ocultarBotones(false); document.getElementById("fondoEditor").style.display = "none"; }
+
+// --- EDITAR PERSONAJES ---
+function modoEditarPersonajes() {
+  if(perfil !== "glen") return;
+  ocultarBotones(true);
+  document.getElementById("personajeEditor").style.display = "flex";
+
+  personajes.forEach(p => {
+    if(p.controls) p.controls.remove();
+
+    const contenedor = document.createElement("div");
+    contenedor.style.position = "absolute";
+    contenedor.style.left = p.element.style.left;
+    contenedor.style.top = `calc(${p.element.style.top} + 130px)`;
+    contenedor.style.zIndex = 30;
+
+    // BOTÓN NOMBRE
+    const nombreBtn = document.createElement("button");
+    nombreBtn.textContent = "✏️";
+    nombreBtn.onclick = () => {
+      const nombre = prompt("Escribe el nombre del personaje:", p.nombre);
+      if(nombre!==null) {
+        p.nombre = nombre;
+        if(!p.label) {
+          const label = document.createElement("div");
+          label.className = "nombre";
+          p.label = label;
+          document.body.appendChild(label);
+        }
+        p.label.textContent = nombre;
+        p.label.style.left = p.element.style.left;
+        p.label.style.top = `calc(${p.element.style.top} - 25px)`;
+      }
+    }
+
+    // BOTÓN SONIDO
+    const sonidoBtn = document.createElement("button");
+    sonidoBtn.textContent = "Sonido";
+    sonidoBtn.onclick = () => {
+      document.getElementById("soundInput").onchange = e => {
+        p.sonido = new Audio(URL.createObjectURL(e.target.files[0]));
+        p.element.onclick = () => { if(p.sonido) p.sonido.play(); };
+      }
+      document.getElementById("soundInput").click();
+    }
+
+    // BOTÓN BORRAR
+    const borrarBtn = document.createElement("button");
+    borrarBtn.textContent = "🗑️";
+    borrarBtn.onclick = () => {
+      p.element.remove();
+      if(p.label) p.label.remove();
+      if(p.controls) p.controls.remove();
+      personajes = personajes.filter(per => per !== p);
+    }
+
+    contenedor.appendChild(nombreBtn);
+    contenedor.appendChild(sonidoBtn);
+    contenedor.appendChild(borrarBtn);
+    document.body.appendChild(contenedor);
+    p.controls = contenedor;
+
+    // sonido al click
+    p.element.onclick = () => { if(p.sonido) p.sonido.play(); };
+  });
+}
+   
+function guardarPersonajes() { 
+  ocultarBotones(false); 
+  document.getElementById("personajeEditor").style.display = "none"; 
+  personajes.forEach(p => { if(p.controls) p.controls.style.display = "none"; }); 
+}
+
+// --- AUX ---
+function ocultarBotones(ocultar) { if(perfil==="glen") document.getElementById("botones").style.display = ocultar ? "none" : "flex"; }
+
+// --- ANIMACIÓN FLOTACIÓN NATURAL ---
+function animarPersonajes() {
+  personajes.forEach(p => {
+    const el = p.element;
+    let left = parseFloat(el.style.left);
+    let top = parseFloat(el.style.top);
+
+    // mover suavemente
+    left += p.vel.vx;
+    top += p.vel.vy;
+
+    // rebote bordes
+    if(left < 0){ left=0; p.vel.vx=Math.abs(p.vel.vx); }
+    if(left > 80){ left=80; p.vel.vx=-Math.abs(p.vel.vx); }
+    if(top < 0){ top=0; p.vel.vy=Math.abs(p.vel.vy); }
+    if(top > 80){ top=80; p.vel.vy=-Math.abs(p.vel.vy); }
+
+    // flotación natural
+    p.vel.vx += (Math.random()*0.2-0.1)*0.05;
+    p.vel.vy += (Math.random()*0.2-0.1)*0.05;
+
+    // suavizar velocidad
+    p.vel.vx *= 0.98;
+    p.vel.vy *= 0.98;
+
+    el.style.left = left + "%";
+    el.style.top = top + "%";
+
+    if(p.label){
+      p.label.style.left = el.style.left;
+      p.label.style.top = `calc(${el.style.top} - 25px)`;
+    }
+  });
+
+  requestAnimationFrame(animarPersonajes);
+}
+// --- ELEMENTO FIJO EN EL FONDO ---
+function agregarElementoFijoFondo(url, leftPercent, topPercent, widthPx) {
+  const img = document.createElement("img");
+  img.src = url;
+  img.style.position = "absolute";
+  img.style.left = leftPercent + "%";
+  img.style.top = topPercent + "%";
+  img.style.width = widthPx + "px";  // tamaño del elemento
+  img.style.transform = "translate(-50%, -50%)"; // para centrar
+  img.style.pointerEvents = "none"; // que no se pueda clickear
+  img.style.zIndex = 5; // detrás de los personajes pero encima del fondo
+  document.body.appendChild(img);
+}
+// Ejemplo con tu ojo
+agregarElementoFijoFondo("https://i.imgur.com/eCqEAs3.png", 50, 40, 1100);
+
+agregarElementoFijoFondo("https://i.imgur.com/u8fqAHn.png", 50, 25, 600);
+
+// --- NUEVA FUNCIÓN ---
+function agregarPersonajeDesdeURL(url) {
+  const img = document.createElement("img");
+  img.src = url;
+  img.className = "personaje";
+
+  const pos = getPosicionLibre();
+  img.style.left = pos.left + "%";
+  img.style.top = pos.top + "%";
+
+  const vel = {vx: (Math.random()*0.5-0.25), vy: (Math.random()*0.5-0.25)};
+  img.vel = vel;
+
+  document.body.appendChild(img);
+  personajes.push({element: img, sonido: null, nombre: "", vel: vel, label: null, controls: null, tiempoCreacion: Date.now()});
+}
+function crearPersonajeConSonido({
+  imgURL,
+  sonidoURL,
+  left = 40,
+  top = 40,
+  tamaño = 120
+}) {
+  const img = document.createElement("img");
+  img.src = imgURL;
+  img.className = "personaje";
+  img.style.left = left + "%";
+  img.style.top = top + "%";
+  img.style.width = tamaño + "px";
+
+  const audio = new Audio(sonidoURL);
+  audio.preload = "auto";
+
+  const vel = {
+    vx: Math.random() * 0.5 - 0.25,
+    vy: Math.random() * 0.5 - 0.25
+  };
+
+  img.onclick = () => {
+    audio.currentTime = 0; // reinicia el sonido
+    audio.play();
+   alert("RKseries");
+  };
+
+  document.body.appendChild(img);
+
+  personajes.push({
+    element: img,
+    sonido: audio,
+    vel: vel,
+    label: null
+  });
+}
+crearPersonajeConSonido({
+  imgURL: "https://i.imgur.com/2mhZeLb.png",
+  sonidoURL: "https://raw.githubusercontent.com/Kiwifl1p/Sound-effect-1/refs/heads/main/String%20_Sound%20Effect__1.m4a",
+  left: 30,
+  top: 50,
+  tamaño: 150
+});
+
+crearPersonajeConSonido({
+  imgURL: "https://i.imgur.com/RlzGMSJ.png",
+  sonidoURL: "https://raw.githubusercontent.com/Kiwifl1p/Sound-effect-2-meow-/refs/heads/main/Cat%20Meow%20Sound%20Effect%20%20Attract%20Cats%20Sounds%20Cats%20Love_1.m4a",
+  left: 30,
+  top: 50,
+  tamaño: 150
+});
+
+// --- MÚSICA DE FONDO ---
+const musicaNormal = new Audio(
+  "https://raw.githubusercontent.com/Kiwifl1p/CATHEDRAL-AMBIENCE-1-HOUR-of-Calming-Pipe-Organ-Music-for-Meditation-Study-and-Sleep-YouTube-/refs/heads/main/CATHEDRAL%20AMBIENCE%20%201%20HOUR%20of%20Calming%20Pipe%20Organ%20Music%20for%20Meditation%20Study%20and%20Sleep_1_1.m4a"
+);
+musicaNormal.loop = true;
+musicaNormal.volume = 0.6;
+
+const musicaOscura = new Audio(
+  "https://raw.githubusercontent.com/Kiwifl1p/Scary-sound-effect-/refs/heads/main/SONIDO%20DE%20VIENTO%20(NEBLINA)%20MIEDO%20%20Efecto%20de%20sonido%20.m4a"
+);
+musicaOscura.loop = true;
+musicaOscura.volume = 0;
+
+let audioDesbloqueado = false;
+
+// desbloqueo para navegador
+document.addEventListener("click", () => {
+  if (audioDesbloqueado) return;
+
+  musicaNormal.play().catch(() => {});
+  musicaOscura.play().catch(() => {});
+
+  audioDesbloqueado = true;
+}, { once: true });
+
+function fadeToOscuro() {
+  let paso = 0.02;
+
+  const fade = setInterval(() => {
+    musicaNormal.volume = Math.max(0, musicaNormal.volume - paso);
+    musicaOscura.volume = Math.min(1, musicaOscura.volume + paso);
+
+    if (musicaNormal.volume <= 0) {
+      musicaNormal.pause();
+      clearInterval(fade);
+    }
+  }, 100);
+}
+
+let clicksOjo = 0;
+let efectoActivo = false;
+
+// sensor invisible
+const sensorOjo = document.createElement("div");
+
+sensorOjo.style.position = "absolute";
+sensorOjo.style.left = "50%";
+sensorOjo.style.top = "40%";
+sensorOjo.style.width = "260px";
+sensorOjo.style.height = "260px";
+sensorOjo.style.transform = "translate(-50%, -50%)";
+sensorOjo.style.cursor = "pointer";
+sensorOjo.style.zIndex = "20"; // encima del ojo
+sensorOjo.style.background = "transparent";
+
+document.body.appendChild(sensorOjo);
+sensorOjo.addEventListener("click", () => {
+  if (efectoActivo) return;
+
+  clicksOjo++;
+  console.log("Clicks al ojo:", clicksOjo);
+
+  if (clicksOjo === 3) {
+    alert("No deberías seguir tocando...");
+  }
+
+  if (clicksOjo === 6) {
+    efectoActivo = true;
+    apagarPantalla();
+  }
+});
+function apagarPantalla() {
+   fadeToOscuro();
+
+  const overlay = document.createElement("div");
+
+  overlay.style.position = "fixed";
+  overlay.style.inset = "0";
+  overlay.style.background = "rgba(0,0,0,0.95)";
+  overlay.style.zIndex = "100";
+  overlay.style.pointerEvents = "none";
+
+  document.body.appendChild(overlay);
+
+  setTimeout(mostrarMensajeHV, 3000);
+}
+function mostrarMensajeHV() {
+  const mensaje = document.createElement("div");
+  
+  mensaje.innerHTML = `
+    ¿Querés saber el nombre del siguiente episodio?<br><br>
+    Estuvo frente a tus ojos todo el tiempo.<br>
+    Lo has escuchado.<br>
+    Y lo has visto de manera cifrada.<br><br>
+    Esta es otra oportunidad:<br>
+    El nombre está escondido en algún lado de la web.<br><br>
+    Suerte.  1913446849\"$/<br><br>
+    — HV
+  `;
+
+  mensaje.style.position = "fixed";
+  mensaje.style.inset = "0";
+  mensaje.style.display = "flex";
+  mensaje.style.alignItems = "center";
+  mensaje.style.justifyContent = "center";
+  mensaje.style.textAlign = "center";
+  mensaje.style.color = "#9cff9c";
+  mensaje.style.fontFamily = "Courier New, monospace";
+  mensaje.style.fontSize = "18px";
+  mensaje.style.zIndex = "101";
+  mensaje.style.padding = "40px";
+
+  document.body.appendChild(mensaje);
+}
+
+// --- BOTÓN INVISIBLE A ---
+const botonSecretoA = document.createElement("div");
+botonSecretoA.style.position = "fixed";
+botonSecretoA.style.left= "50px";
+botonSecretoA.style.top = "50px";
+botonSecretoA.style.width = "20px";
+botonSecretoA.style.height = "20px";
+botonSecretoA.style.opacity = "0.03";
+botonSecretoA.style.cursor = "pointer";
+botonSecretoA.style.zIndex = "300";
+document.body.appendChild(botonSecretoA);
+
+botonSecretoA.addEventListener("click", () => {
+  mostrarVentanaSimbolos();
+});
+
+function mostrarVentanaSimbolos() {
+  const overlay = document.createElement("div");
+  overlay.className = "ventana-secreta";
+
+  overlay.innerHTML = `
+    <div class="cerrar">✖</div>
+    <div class="ventana-box">
+      <p>uqgr8324ieowd4w89hwieo8gwegtul</p>
+      <p>48r8g4w8g4wg8w4g8w4g8w</p>
+      <p>48wggereergt45547#%4g8w4g8w</p>
+      <p>4w4#$%&DD((hss8HD84%&/(DGD8GDdgdw</p>
+      <p>___-_-_-__--__-___2383832283238238</p><br>
+      <p>Era muy fácil si te lo decía así nomás, ¿verdad?</p>
+      <p>No creas que iba a decírtelo tan fácilmente...</p>
+      <p>Necesitas una contraseña para el otro botón secreto, búscalo.</p>
+       <p>
+         La contraseña no se entrega.<br>
+         Está <i>dispersa</i>.<br>
+        Mirá con atención lo que tocás.
+       </p>
+
+      <p>Suerte.</p>
+      <p>-Glen.</p>
+    </div>
+  `;
+
+  overlay.querySelector(".cerrar").onclick = () => overlay.remove();
+  document.body.appendChild(overlay);
+}
+let dxA = 0.3;
+let dyA = 0.2;
+
+setInterval(() => {
+  const rect = botonSecretoA.getBoundingClientRect();
+
+  let x = rect.left + dxA;
+  let y = rect.top + dyA;
+
+  if (x < 0 || x > window.innerWidth - 20) dxA *= -1;
+  if (y < 0 || y > window.innerHeight - 20) dyA *= -1;
+
+  botonSecretoA.style.left = x + "px";
+  botonSecretoA.style.top = y + "px";
+}, 16);
+
+// --- BOTÓN INVISIBLE B ---
+const botonSecretoB = document.createElement("div");
+botonSecretoB.style.position = "fixed";
+botonSecretoB.style.top = Math.random() * (window.innerHeight - 20) + "px";
+botonSecretoB.style.left = Math.random() * (window.innerWidth - 20) + "px";
+botonSecretoB.style.width = "18px";
+botonSecretoB.style.height = "18px";
+botonSecretoB.style.opacity = "0.03";
+botonSecretoB.style.cursor = "pointer";
+botonSecretoB.style.zIndex = "300";
+document.body.appendChild(botonSecretoB);
+
+const PASSWORD = "RKseries1913446849\"$/4everRa1n3ddAbbey";
+
+botonSecretoB.addEventListener("click", () => {
+  mostrarVentanaPassword();
+});
+
+function mostrarVentanaPassword() {
+  const overlay = document.createElement("div");
+  overlay.className = "ventana-secreta";
+
+  overlay.innerHTML = `
+    <div class="cerrar">✖</div>
+    <div class="ventana-box">
+      <p>Introducí la contraseña:</p><br>
+      <input id="passInput" type="text" style="width:100%; padding:10px; background:black; color:#9cff9c; border:1px solid #9cff9c; font-family:monospace;">
+      <br><br>
+      <button id="verificarBtn">Confirmar</button>
+      <div id="resultado"></div>
+    </div>
+  `;
+
+  overlay.querySelector(".cerrar").onclick = () => overlay.remove();
+
+  overlay.querySelector("#verificarBtn").onclick = () => {
+    const val = overlay.querySelector("#passInput").value;
+    const res = overlay.querySelector("#resultado");
+
+    if (val === PASSWORD) {
+      res.innerHTML = `<br>🧸, 🐸, 🦎, ⚫+⚪,🐘,⚫, E,🐍<br><br><i>Felicitaciones.</i>`;
+    } else {
+      res.innerHTML = `<br>Contraseña incorrecta.`;
+    }
+  };
+
+  document.body.appendChild(overlay);
+}
+let dxB = (Math.random() * 1 - 0.5) * 1.5;
+let dyB = (Math.random() * 1 - 0.5) * 1.5;
+
+setInterval(() => {
+  const rect = botonSecretoB.getBoundingClientRect();
+
+  let x = rect.left + dxB;
+  let y = rect.top + dyB;
+
+  if (x < 0 || x > window.innerWidth - 18) dxB *= -1;
+  if (y < 0 || y > window.innerHeight - 18) dyB *= -1;
+
+  // movimiento impredecible
+  dxB += (Math.random() - 0.5) * 0.1;
+  dyB += (Math.random() - 0.5) * 0.1;
+
+  dxB *= 0.99;
+  dyB *= 0.99;
+
+  botonSecretoB.style.left = x + "px";
+  botonSecretoB.style.top = y + "px";
+}, 16);
+
+// --- BOTÓN INVISIBLE C ---
+const botonSecretoC = document.createElement("div");
+botonSecretoC.style.position = "fixed";
+botonSecretoC.style.left= "50px";
+botonSecretoC.style.top = "50px";
+botonSecretoC.style.width = "20px";
+botonSecretoC.style.height = "20px";
+botonSecretoC.style.opacity = "0.03";
+botonSecretoC.style.cursor = "pointer";
+botonSecretoC.style.zIndex = "300";
+document.body.appendChild(botonSecretoC);
+
+botonSecretoC.addEventListener("click", () => {
+  mostrarVentanaSimbolosC();
+});
+
+function mostrarVentanaSimbolosC() {
+  const overlay = document.createElement("div");
+  overlay.className = "ventana-secreta";
+
+  overlay.innerHTML = `
+    <div class="cerrar">✖</div>
+    <div class="ventana-box">
+      <p>uqgr8324ieowd4w89hwieo8gwegtul</p>
+      <p>48r8g4w8g4wg8w4g8w4g8w</p>
+      <p>48wggereergt45547#%4g8w4g8w</p>
+      <p>4w4#$%&DD((hss8HD84%&/(DGD8GDdgdw</p>
+      <p>4everRa1n3ddAbbeY</p>
+      <p>Suerte.</p>
+      <p>-Glen.</p>
+    </div>
+  `;
+
+  overlay.querySelector(".cerrar").onclick = () => overlay.remove();
+  document.body.appendChild(overlay);
+}
+let dxC = 0.3;
+let dyC = 0.2;
+
+setInterval(() => {
+  const rect = botonSecretoC.getBoundingClientRect();
+
+  let x = rect.left + dxC;
+  let y = rect.top + dyC;
+
+  if (x < 0 || x > window.innerWidth - 20) dxC *= -1;
+  if (y < 0 || y > window.innerHeight - 20) dyC *= -1;
+
+  botonSecretoC.style.left = x + "px";
+  botonSecretoC.style.top = y + "px";
+}, 16);
+
+// --- ANIMACIÓN FINAL ---
+requestAnimationFrame(animarPersonajes);
+</script>
+</body>
+</html>

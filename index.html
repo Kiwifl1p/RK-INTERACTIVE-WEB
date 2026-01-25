@@ -496,7 +496,7 @@ crearPersonajeConSonido({
 
 // --- MÚSICA DE FONDO ---
 const musicaNormal = new Audio(
-  "https://raw.githubusercontent.com/Kiwifl1p/CATHEDRAL-AMBIENCE-1-HOUR-of-Calming-Pipe-Organ-Music-for-Meditation-Study-and-Sleep-YouTube-/refs/heads/main/CATHEDRAL%20AMBIENCE%20%201%20HOUR%20of%20Calming%20Pipe%20Organ%20Music%20for%20Meditation%20Study%20and%20Sleep_1_1.m4a"
+  "https://raw.githubusercontent.com/Kiwifl1p/Suspense-music-background/refs/heads/main/Detective%20Background%20Music%20%20Crime%20Scene%20Spy%20Investigation%20%20Royalty%20Free.m4a"
 );
 musicaNormal.loop = true;
 musicaNormal.volume = 0.6;
@@ -582,21 +582,13 @@ function apagarPantalla() {
 }
 function mostrarMensajeHV() {
   const mensaje = document.createElement("div");
-  
-  mensaje.innerHTML = `
-    ¿Querés saber el nombre del siguiente episodio?<br><br>
-    Estuvo frente a tus ojos todo el tiempo.<br>
-    Lo has escuchado.<br>
-    Y lo has visto de manera cifrada.<br><br>
-    Esta es otra oportunidad:<br>
-    El nombre está escondido en algún lado de la web.<br><br>
-    Suerte.  1913446849\"$/<br><br>
-    — HV
-  `;
+
+  mensaje.id = "mensaje-final";
 
   mensaje.style.position = "fixed";
   mensaje.style.inset = "0";
   mensaje.style.display = "flex";
+  mensaje.style.flexDirection = "column";
   mensaje.style.alignItems = "center";
   mensaje.style.justifyContent = "center";
   mensaje.style.textAlign = "center";
@@ -605,8 +597,20 @@ function mostrarMensajeHV() {
   mensaje.style.fontSize = "18px";
   mensaje.style.zIndex = "101";
   mensaje.style.padding = "40px";
+  mensaje.style.background = "rgba(0,0,0,0.95)";
+
+  mensaje.innerHTML = `
+    <p>El misterio fue resuelto.</p><br>
+    <p>El capítulo ya existe.</p>
+    <p>Solo falta el momento.</p><br><br>
+    <p style="opacity:0.8">Estreno en:</p>
+    <div id="contador" style="font-size:26px; margin-top:10px;"></div><br>
+    <p style="opacity:0.6">28 · 02 · 2026</p>
+  `;
 
   document.body.appendChild(mensaje);
+
+  iniciarCuentaRegresiva();
 }
 
 // --- BOTÓN INVISIBLE A ---
@@ -792,6 +796,94 @@ setInterval(() => {
   botonSecretoC.style.left = x + "px";
   botonSecretoC.style.top = y + "px";
 }, 16);
+// --- BOTÓN DEL TIEMPO ---
+const fechaEstreno = new Date("2026-02-28T00:00:00").getTime();
+
+const botonTiempo = document.createElement("div");
+botonTiempo.innerText = "Aún no.";
+botonTiempo.style.position = "fixed";
+botonTiempo.style.bottom = "18px";
+botonTiempo.style.left = "50%";
+botonTiempo.style.transform = "translateX(-50%)";
+botonTiempo.style.padding = "6px 14px";
+botonTiempo.style.fontFamily = "monospace";
+botonTiempo.style.fontSize = "12px";
+botonTiempo.style.color = "black";
+botonTiempo.style.background = "rgba(0,0,0,0.08)";
+botonTiempo.style.border = "1px solid rgba(0,0,0,0.15)";
+botonTiempo.style.borderRadius = "20px";
+botonTiempo.style.cursor = "pointer";
+botonTiempo.style.opacity = "0.4";
+botonTiempo.style.transition = "opacity 0.3s";
+botonTiempo.style.zIndex = "200";
+
+document.body.appendChild(botonTiempo);
+
+// Hover sutil
+botonTiempo.onmouseenter = () => botonTiempo.style.opacity = "0.8";
+botonTiempo.onmouseleave = () => botonTiempo.style.opacity = "0.4";
+
+// Click
+botonTiempo.onclick = () => {
+  const ahora = Date.now();
+  if (ahora < fechaEstreno) {
+    botonTiempo.style.animation = "shake 0.4s";
+    setTimeout(() => botonTiempo.style.animation = "", 400);
+  }
+};
+
+// Actualiza texto según el tiempo
+function actualizarTiempo() {
+  if (Date.now() >= fechaEstreno) {
+    botonTiempo.innerText = "Ahora sí.";
+    botonTiempo.style.opacity = "0.9";
+  }
+}
+setInterval(actualizarTiempo, 1000);
+// --- EFECTO HV POST-ESTRENO ---
+let hvActivo = false;
+
+botonTiempo.addEventListener("click", () => {
+  if (Date.now() < fechaEstreno) return;
+  if (hvActivo) return;
+
+  hvActivo = true;
+  iniciarEfectoHV();
+});
+
+function iniciarEfectoHV() {
+  const overlay = document.createElement("div");
+  overlay.style.position = "fixed";
+  overlay.style.inset = "0";
+  overlay.style.pointerEvents = "none";
+  overlay.style.zIndex = "150";
+  overlay.style.fontFamily = "monospace";
+  overlay.style.color = "rgba(0,0,0,0.25)";
+  overlay.style.background = "transparent";
+  overlay.style.overflow = "hidden";
+
+  document.body.appendChild(overlay);
+
+  let cantidad = 0;
+  const max = 120;
+
+  const intervalo = setInterval(() => {
+    for (let i = 0; i < 4; i++) {
+      const hv = document.createElement("div");
+      hv.innerText = "HV";
+      hv.style.position = "absolute";
+      hv.style.left = Math.random() * 100 + "%";
+      hv.style.top = Math.random() * 100 + "%";
+      hv.style.fontSize = Math.random() * 22 + 12 + "px";
+      hv.style.opacity = Math.random() * 0.3;
+      hv.style.transform = "rotate(" + (Math.random() * 20 - 10) + "deg)";
+      overlay.appendChild(hv);
+    }
+
+    cantidad += 4;
+    if (cantidad >= max) clearInterval(intervalo);
+  }, 120);
+}
 
 // --- ANIMACIÓN FINAL ---
 requestAnimationFrame(animarPersonajes);

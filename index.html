@@ -374,6 +374,7 @@ function ocultarBotones(ocultar) { if(perfil==="glen") document.getElementById("
 // --- ANIMACIÓN FLOTACIÓN NATURAL ---
 function animarPersonajes() {
   personajes.forEach(p => {
+   if (p.arrastrando) return;
     const el = p.element;
     let left = parseFloat(el.style.left);
     let top = parseFloat(el.style.top);
@@ -884,9 +885,197 @@ function iniciarEfectoHV() {
     if (cantidad >= max) clearInterval(intervalo);
   }, 120);
 }
+// --- DRAG & DROP CORRECTO ---
+let personajeArrastrado = null;
+let offsetX = 0;
+let offsetY = 0;
 
+document.addEventListener("mousedown", (e) => {
+  const target = e.target;
+  if (!target.classList.contains("personaje")) return;
+
+  personajeArrastrado = personajes.find(p => p.element === target);
+  if (!personajeArrastrado) return;
+
+  const rect = target.getBoundingClientRect();
+
+  offsetX = e.clientX - rect.left;
+  offsetY = e.clientY - rect.top;
+
+  // fijamos posición en px (CRUCIAL)
+  target.style.position = "fixed";
+  target.style.left = rect.left + "px";
+  target.style.top = rect.top + "px";
+
+  // congelamos flotación
+  personajeArrastrado.vel.vx = 0;
+  personajeArrastrado.vel.vy = 0;
+  personajeArrastrado.arrastrando = true;
+
+  target.style.zIndex = "500";
+  e.preventDefault();
+});
+
+document.addEventListener("mousemove", (e) => {
+  if (!personajeArrastrado) return;
+
+  personajeArrastrado.element.style.left =
+    e.clientX - offsetX + "px";
+  personajeArrastrado.element.style.top =
+    e.clientY - offsetY + "px";
+});
+document.addEventListener("mouseup", () => {
+  if (!personajeArrastrado) return;
+
+  const el = personajeArrastrado.element;
+
+  // posición actual en px
+  const rect = el.getBoundingClientRect();
+
+  // convertir a %
+  const leftPercent = (rect.left / window.innerWidth) * 100;
+  const topPercent = (rect.top / window.innerHeight) * 100;
+
+  el.style.left = leftPercent + "%";
+  el.style.top = topPercent + "%";
+  el.style.position = "absolute";
+  el.style.zIndex = "30";
+
+  personajeArrastrado.arrastrando = false;
+
+  // pequeña velocidad inicial para que no quede muerto
+  personajeArrastrado.vel.vx = Math.random() * 0.5 - 0.25;
+  personajeArrastrado.vel.vy = Math.random() * 0.5 - 0.25;
+
+  personajeArrastrado = null;
+});
 // --- ANIMACIÓN FINAL ---
 requestAnimationFrame(animarPersonajes);
+// ===============================
+// BARRA LATERAL – SOLO OLIVER
+// ===============================
+const barraLateral = document.createElement("div");
+barraLateral.id = "barra-lateral";
+barraLateral.style.position = "fixed";
+barraLateral.style.left = "12px";
+barraLateral.style.top = "50%";
+barraLateral.style.transform = "translateY(-50%)";
+barraLateral.style.display = "none";
+barraLateral.style.flexDirection = "column";
+barraLateral.style.gap = "10px";
+barraLateral.style.zIndex = "120";
+
+document.body.appendChild(barraLateral);
+
+// estilo base
+function aplicarColorBarra(color) {
+  barraLateral.querySelectorAll("button").forEach(btn => {
+    btn.style.background = color;
+  });
+}
+
+// botones
+barraLateral.innerHTML = `
+  <button data-btn="ajustes">⚙</button>
+  <button data-btn="juegos">🕹</button>
+  <button data-btn="info">?</button>
+`;
+
+// estilo botones
+barraLateral.querySelectorAll("button").forEach(btn => {
+  btn.style.width = "42px";
+  btn.style.height = "42px";
+  btn.style.borderRadius = "50%";
+  btn.style.border = "none";
+  btn.style.fontSize = "18px";
+  btn.style.cursor = "pointer";
+  btn.style.background = "rgba(255,255,255,0.18)";
+  btn.style.color = "white";
+  btn.style.transition = "0.2s";
+  btn.onmouseenter = () => btn.style.transform = "scale(1.15)";
+  btn.onmouseleave = () => btn.style.transform = "scale(1)";
+});
+
+// mostrar solo para oliver
+function actualizarBarraLateral() {
+  barraLateral.style.display = perfil === "oliver" ? "flex" : "none";
+}
+actualizarBarraLateral();
+
+// ===============================
+// VENTANA BASE
+// ===============================
+function crearVentana(contenidoHTML) {
+  const overlay = document.createElement("div");
+  overlay.className = "ventana-secreta";
+  overlay.innerHTML = `
+    <div class="cerrar">✖</div>
+    <div class="ventana-box">${contenidoHTML}</div>
+  `;
+  overlay.querySelector(".cerrar").onclick = () => overlay.remove();
+  document.body.appendChild(overlay);
+}
+
+// ===============================
+// AJUSTES
+// ===============================
+function abrirAjustes() {
+  crearVentana(`
+    <h3>Ajustes</h3>
+    <p>Colores del menú:</p>
+    <div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:center;">
+      <button onclick="aplicarColorBarra('#1e2a44')">Azul oscuro</button>
+      <button onclick="aplicarColorBarra('#ff8c42')">Naranja</button>
+      <button onclick="aplicarColorBarra('#ffc48c')">Naranja claro</button>
+      <button onclick="aplicarColorBarra('#9cff9c')">Verde claro</button>
+      <button onclick="aplicarColorBarra('#f4b6c2')">Rosa pastel</button>
+      <button onclick="aplicarColorBarra('#b39ddb')">Violeta</button>
+    </div>
+  `);
+}
+
+// ===============================
+// MINI-JUEGOS (placeholder)
+// ===============================
+function abrirJuegos() {
+  crearVentana(`
+    <h3>Minijuegos</h3>
+    <p>Próximamente:</p>
+    <ul style="text-align:left">
+      <li>🧩 Juego 1</li>
+      <li>🎲 Juego 2</li>
+      <li>🕶 Juego 3</li>
+    </ul>
+  `);
+}
+
+// ===============================
+// INFO
+// ===============================
+function abrirInfo() {
+  crearVentana(`
+    <p>
+      Esta web es parte de un proyecto independiente que no pertenece a nada realmente.
+      <br><br>
+      Sentite libre de experimentar y jugar.
+    </p>
+  `);
+}
+
+// ===============================
+// EVENTOS BOTONES
+// ===============================
+barraLateral.querySelector('[data-btn="ajustes"]').onclick = abrirAjustes;
+barraLateral.querySelector('[data-btn="juegos"]').onclick = abrirJuegos;
+barraLateral.querySelector('[data-btn="info"]').onclick = abrirInfo;
+
+// refresca barra al elegir perfil
+const elegirPerfilOriginal = elegirPerfil;
+elegirPerfil = function(p) {
+  elegirPerfilOriginal(p);
+  actualizarBarraLateral();
+};
+
 </script>
 </body>
 </html>

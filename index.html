@@ -497,13 +497,13 @@ crearPersonajeConSonido({
 
 // --- MÚSICA DE FONDO ---
 const musicaNormal = new Audio(
-  "https://raw.githubusercontent.com/Kiwifl1p/Suspense-music-background/refs/heads/main/Detective%20Background%20Music%20%20Crime%20Scene%20Spy%20Investigation%20%20Royalty%20Free.m4a"
+  "https://raw.githubusercontent.com/Kiwifl1p/CATHEDRAL-AMBIENCE-1-HOUR-of-Calming-Pipe-Organ-Music-for-Meditation-Study-and-Sleep-YouTube-/refs/heads/main/CATHEDRAL%20AMBIENCE%20%201%20HOUR%20of%20Calming%20Pipe%20Organ%20Music%20for%20Meditation%20Study%20and%20Sleep_1_1.m4a"
 );
 musicaNormal.loop = true;
 musicaNormal.volume = 0.6;
 
 const musicaOscura = new Audio(
-  "https://raw.githubusercontent.com/Kiwifl1p/Scary-sound-effect-/refs/heads/main/SONIDO%20DE%20VIENTO%20(NEBLINA)%20MIEDO%20%20Efecto%20de%20sonido%20.m4a"
+  "https://raw.githubusercontent.com/Kiwifl1p/Suspense-music-background/refs/heads/main/Detective%20Background%20Music%20%20Crime%20Scene%20Spy%20Investigation%20%20Royalty%20Free.m4a"
 );
 musicaOscura.loop = true;
 musicaOscura.volume = 0;
@@ -642,17 +642,10 @@ function mostrarVentanaSimbolos() {
       <p>48wggereergt45547#%4g8w4g8w</p>
       <p>4w4#$%&DD((hss8HD84%&/(DGD8GDdgdw</p>
       <p>___-_-_-__--__-___2383832283238238</p><br>
-      <p>Era muy fácil si te lo decía así nomás, ¿verdad?</p>
-      <p>No creas que iba a decírtelo tan fácilmente...</p>
-      <p>Necesitas una contraseña para el otro botón secreto, búscalo.</p>
-       <p>
-         La contraseña no se entrega.<br>
-         Está <i>dispersa</i>.<br>
-        Mirá con atención lo que tocás.
-       </p>
-
-      <p>Suerte.</p>
-      <p>-Glen.</p>
+      <p>Son el fuego caído que aún arde, en la Tierra.</p>
+      <p>Venera, odia o teme. La decisión es tuya.</p>
+      <p>L,O,S</p>
+      <p>-HV.</p>
     </div>
   `;
 
@@ -673,77 +666,6 @@ setInterval(() => {
 
   botonSecretoA.style.left = x + "px";
   botonSecretoA.style.top = y + "px";
-}, 16);
-
-// --- BOTÓN INVISIBLE B ---
-const botonSecretoB = document.createElement("div");
-botonSecretoB.style.position = "fixed";
-botonSecretoB.style.top = Math.random() * (window.innerHeight - 20) + "px";
-botonSecretoB.style.left = Math.random() * (window.innerWidth - 20) + "px";
-botonSecretoB.style.width = "18px";
-botonSecretoB.style.height = "18px";
-botonSecretoB.style.opacity = "0.03";
-botonSecretoB.style.cursor = "pointer";
-botonSecretoB.style.zIndex = "300";
-document.body.appendChild(botonSecretoB);
-
-const PASSWORD = "RKseries1913446849\"$/4everRa1n3ddAbbey";
-
-botonSecretoB.addEventListener("click", () => {
-  mostrarVentanaPassword();
-});
-
-function mostrarVentanaPassword() {
-  const overlay = document.createElement("div");
-  overlay.className = "ventana-secreta";
-
-  overlay.innerHTML = `
-    <div class="cerrar">✖</div>
-    <div class="ventana-box">
-      <p>Introducí la contraseña:</p><br>
-      <input id="passInput" type="text" style="width:100%; padding:10px; background:black; color:#9cff9c; border:1px solid #9cff9c; font-family:monospace;">
-      <br><br>
-      <button id="verificarBtn">Confirmar</button>
-      <div id="resultado"></div>
-    </div>
-  `;
-
-  overlay.querySelector(".cerrar").onclick = () => overlay.remove();
-
-  overlay.querySelector("#verificarBtn").onclick = () => {
-    const val = overlay.querySelector("#passInput").value;
-    const res = overlay.querySelector("#resultado");
-
-    if (val === PASSWORD) {
-      res.innerHTML = `<br>🧸, 🐸, 🦎, ⚫+⚪,🐘,⚫, E,🐍<br><br><i>Felicitaciones.</i>`;
-    } else {
-      res.innerHTML = `<br>Contraseña incorrecta.`;
-    }
-  };
-
-  document.body.appendChild(overlay);
-}
-let dxB = (Math.random() * 1 - 0.5) * 1.5;
-let dyB = (Math.random() * 1 - 0.5) * 1.5;
-
-setInterval(() => {
-  const rect = botonSecretoB.getBoundingClientRect();
-
-  let x = rect.left + dxB;
-  let y = rect.top + dyB;
-
-  if (x < 0 || x > window.innerWidth - 18) dxB *= -1;
-  if (y < 0 || y > window.innerHeight - 18) dyB *= -1;
-
-  // movimiento impredecible
-  dxB += (Math.random() - 0.5) * 0.1;
-  dyB += (Math.random() - 0.5) * 0.1;
-
-  dxB *= 0.99;
-  dyB *= 0.99;
-
-  botonSecretoB.style.left = x + "px";
-  botonSecretoB.style.top = y + "px";
 }, 16);
 
 // --- BOTÓN INVISIBLE C ---
@@ -771,11 +693,10 @@ function mostrarVentanaSimbolosC() {
     <div class="ventana-box">
       <p>uqgr8324ieowd4w89hwieo8gwegtul</p>
       <p>48r8g4w8g4wg8w4g8w4g8w</p>
-      <p>48wggereergt45547#%4g8w4g8w</p>
-      <p>4w4#$%&DD((hss8HD84%&/(DGD8GDdgdw</p>
-      <p>4everRa1n3ddAbbeY</p>
-      <p>Suerte.</p>
-      <p>-Glen.</p>
+      <p>-.. . .--- .- / -.. . / ... . --. ..- .. .-. -- . / -.. . .--- .- /</p>
+      <p> -.. . / ...- --- .-.. ...- . .-. / -.. . .--- .- / -.. . /</p>
+      <p> .- .--. .- .-. . -.-. . .-. .-.-.- ..-.- .--. --- .-. --.- ..- ..-.. / ...- ..- . .-.. ...- . ... ..--.. /</p>
+      <p> -. --- / -- . / -.. . .--- .- ... / -.. --- .-. -- .. .-. / . -. / .--. .- --.. .-.-.-</p>
     </div>
   `;
 
@@ -797,6 +718,26 @@ setInterval(() => {
   botonSecretoC.style.left = x + "px";
   botonSecretoC.style.top = y + "px";
 }, 16);
+
+let debugVisible = false;
+function mostrarBotonesDebug() {
+  [botonSecretoA, botonSecretoC].forEach(btn => {
+    btn.style.opacity = "0.4";
+    btn.style.background = "black";
+    btn.style.outline = "1px dashed white";
+  });
+
+  setTimeout(() => {
+    [botonSecretoA, botonSecretoC].forEach(btn => {
+      btn.style.opacity = "0.03";
+      btn.style.background = "transparent";
+      btn.style.outline = "none";
+    });
+  }, 2000);
+}
+
+mostrarBotonesDebug();
+
 // --- BOTÓN DEL TIEMPO ---
 const fechaEstreno = new Date("2026-02-28T00:00:00").getTime();
 
@@ -1042,9 +983,9 @@ function abrirJuegos() {
     <h3>Minijuegos</h3>
     <p>Próximamente:</p>
     <ul style="text-align:left">
-      <li>🧩 Juego 1</li>
-      <li>🎲 Juego 2</li>
-      <li>🕶 Juego 3</li>
+      <li>Metal Coffee</li>
+      <li>Club de Arte</li>
+      <li>Rock 'N Roll</li>
     </ul>
   `);
 }

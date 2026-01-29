@@ -557,7 +557,7 @@ sensorOjo.addEventListener("click", () => {
   clicksOjo++;
   console.log("Clicks al ojo:", clicksOjo);
 
-if (clicksOjo === 3) {
+  if (clicksOjo === 3) {
     alert("No deberías seguir tocando...");
   }
 
@@ -618,12 +618,12 @@ function mostrarMensajeHV() {
   mensaje.style.background = "rgba(0,0,0,0.95)";
 
   mensaje.innerHTML = `
-    <p>El misterio fue resuelto.</p><br>
-    <p>El capítulo ya existe.</p>
-    <p>Solo falta el momento.</p><br><br>
-    <p style="opacity:0.8">Estreno en:</p>
+    <p>Aún quedan más misterios.</p><br>
+    <p>Esto sólo es el comienzo.</p>
+    <p>Espero lo hayas disfrutado.</p><br><br>
+    <p style="opacity:0.8">Espero no hayan secuelas mañana...Pasa por la web mañana mejor.</p>
     <div id="contador" style="font-size:26px; margin-top:10px;"></div><br>
-    <p style="opacity:0.6">28 · 02 · 2026</p>
+    <p style="opacity:0.6">29 · 01 · 2026</p>
   `;
 
   document.body.appendChild(mensaje);
@@ -756,7 +756,7 @@ function mostrarBotonesDebug() {
 mostrarBotonesDebug();
 
 // --- BOTÓN DEL TIEMPO ---
-const fechaEstreno = new Date("2026-02-28T00:00:00").getTime();
+const fechaEstreno = new Date("2026-01-29T00:00:00").getTime();
 
 const botonTiempo = document.createElement("div");
 botonTiempo.innerText = "Aún no.";
@@ -1037,4 +1037,3 @@ elegirPerfil = function(p) {
 </script>
 </body>
 </html>
-

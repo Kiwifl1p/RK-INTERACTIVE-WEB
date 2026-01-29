@@ -557,11 +557,28 @@ sensorOjo.addEventListener("click", () => {
   clicksOjo++;
   console.log("Clicks al ojo:", clicksOjo);
 
-  if (clicksOjo === 3) {
+if (clicksOjo === 3) {
     alert("No deberías seguir tocando...");
   }
 
-  if (clicksOjo === 6) {
+
+if (clicksOjo === 7) {
+    alert("Esto se volvió irritante, deja mi ojo...");
+  }
+
+if (clicksOjo === 10) {
+    alert("Para.");
+  }
+
+if (clicksOjo === 15) {
+    alert("¿No te cansa molestarme...?");
+  }
+
+if (clicksOjo === 20) {
+    alert("Bueno, como sea, te lo ganaste...supongo, ten. (DA OTRO CLICK)");
+  }
+
+  if (clicksOjo === 21) {
     efectoActivo = true;
     apagarPantalla();
   }
@@ -1020,3 +1037,4 @@ elegirPerfil = function(p) {
 </script>
 </body>
 </html>
+

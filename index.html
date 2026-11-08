@@ -139,6 +139,296 @@ button:active { background: #55cc7a; }
 #glen { background: #7CFF9B; }
 #oliver { background: #FFA94D; }
 </style>
+<style id="nemur-chat-styles">
+
+/* ===============================
+   ACCESO SECRETO Y CHAT DE NÉMUR
+   =============================== */
+#acceso-secreto-zona {
+  position: fixed;
+  top: auto;
+  bottom: 7%;
+  right: 5%;
+  width: 150px;
+  height: 125px;
+  z-index: 110;
+  display: none;
+  cursor: pointer;
+}
+#acceso-secreto-boton {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  width: 112px;
+  height: 94px;
+  object-fit: contain;
+  opacity: 0;
+  transform: scale(.94);
+  transition: opacity .65s ease, transform .65s ease;
+  pointer-events: none;
+}
+#acceso-secreto-zona:hover #acceso-secreto-boton {
+  opacity: 1;
+  transform: scale(1);
+  pointer-events: auto;
+}
+
+#password-overlay, #chat-nemur, #evento-ruta2, #aviso-falso, #pantalla-glitch {
+  position: fixed;
+  inset: 0;
+  z-index: 500;
+}
+#password-overlay {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,.94);
+  color: #f1f1f1;
+  font-family: Arial, sans-serif;
+}
+.password-ventana {
+  position: relative;
+  width: min(390px, calc(100vw - 44px));
+  box-sizing: border-box;
+  padding: 34px 28px 28px;
+  background: #202020;
+  border: 1px solid #555;
+  text-align: center;
+  box-shadow: 0 12px 45px rgba(0,0,0,.55);
+}
+.password-cerrar {
+  position: absolute;
+  top: 10px;
+  right: 14px;
+  padding: 4px 7px;
+  color: #ddd;
+  background: transparent;
+  font-size: 19px;
+}
+.password-ventana h2 {
+  margin: 0 0 22px;
+  font-size: 19px;
+  font-weight: 500;
+}
+#password-input {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 11px;
+  color: #eee;
+  background: #111;
+  border: 1px solid #666;
+  border-radius: 3px;
+  outline: none;
+}
+#password-enviar { margin-top: 15px; }
+#password-error {
+  min-height: 18px;
+  margin: 13px 0 0;
+  color: #ff4545;
+  font-size: 13px;
+}
+#password-overlay.transicion-negra {
+  background: #000;
+}
+#password-overlay.transicion-negra .password-ventana {
+  display: none;
+}
+
+#chat-nemur {
+  display: flex;
+  flex-direction: column;
+  background: #e9ecef;
+  color: #20242a;
+  font-family: Arial, sans-serif;
+  z-index: 510;
+}
+.chat-cabecera {
+  flex: 0 0 auto;
+  min-height: 68px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 16px;
+  box-sizing: border-box;
+  background: #252a31;
+  color: white;
+  box-shadow: 0 2px 7px rgba(0,0,0,.2);
+}
+.chat-avatar {
+  position: relative;
+  width: 43px;
+  height: 43px;
+  flex: 0 0 43px;
+  border-radius: 50%;
+  background: #858585;
+  overflow: hidden;
+}
+.chat-avatar::before {
+  content: "";
+  position: absolute;
+  top: 8px;
+  left: 15px;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: #dedede;
+}
+.chat-avatar::after {
+  content: "";
+  position: absolute;
+  left: 8px;
+  bottom: -5px;
+  width: 28px;
+  height: 23px;
+  border-radius: 50% 50% 35% 35%;
+  background: #dedede;
+}
+.chat-identidad { flex: 1; min-width: 0; }
+.chat-nombre { font-size: 15px; font-weight: 600; }
+#chat-estado { margin-top: 4px; color: #aeb8c3; font-size: 11px; }
+.chat-cerrar {
+  padding: 7px 10px;
+  color: white;
+  background: transparent;
+  font-size: 21px;
+}
+#chat-mensajes {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  padding: 18px clamp(12px, 4vw, 42px) 14px;
+  box-sizing: border-box;
+  background: #e9ecef;
+}
+.chat-fila { display: flex; width: 100%; margin: 9px 0; }
+.chat-fila.jugador { justify-content: flex-end; }
+.chat-fila.desconocido { justify-content: flex-start; }
+.chat-burbuja {
+  max-width: min(78%, 570px);
+  padding: 11px 14px;
+  border-radius: 13px;
+  font-size: 14px;
+  line-height: 1.45;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  box-shadow: 0 1px 2px rgba(0,0,0,.08);
+}
+.chat-fila.jugador .chat-burbuja {
+  background: #cfe4c9;
+  border-bottom-right-radius: 4px;
+}
+.chat-fila.desconocido .chat-burbuja {
+  background: #fff;
+  border-bottom-left-radius: 4px;
+}
+#chat-opciones {
+  flex: 0 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  max-height: 34vh;
+  overflow-y: auto;
+  padding: 12px 14px 16px;
+  box-sizing: border-box;
+  background: #f7f8f9;
+  border-top: 1px solid #d4d8dc;
+}
+#chat-opciones button {
+  max-width: 100%;
+  padding: 10px 14px;
+  border: 1px solid #b7c0c8;
+  border-radius: 18px;
+  background: #fff;
+  color: #303942;
+  font-size: 13px;
+  line-height: 1.35;
+}
+#chat-opciones button:disabled { opacity: .55; cursor: default; }
+.chat-fin {
+  width: 100%;
+  padding: 8px;
+  color: #7b858d;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-align: center;
+}
+
+#evento-ruta2 {
+  z-index: 520;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: #000;
+  color: white;
+  font-family: 'Courier New', monospace;
+}
+#ruta2-letra {
+  font-size: clamp(90px, 20vw, 190px);
+  color: #f4f4f4;
+  text-shadow: 0 0 22px rgba(255,255,255,.35);
+  animation: letra-aparece 1.2s ease both;
+}
+@keyframes letra-aparece {
+  from { opacity: 0; transform: scale(.8); }
+  to { opacity: 1; transform: scale(1); }
+}
+#ruta2-imagen {
+  position: absolute;
+  left: 18px;
+  bottom: 18px;
+  width: min(180px, 28vw);
+  max-height: 34vh;
+  object-fit: contain;
+  cursor: pointer;
+  animation: imagen-aparece .8s ease both;
+}
+@keyframes imagen-aparece { from {opacity:0;} to {opacity:1;} }
+
+#aviso-falso {
+  z-index: 530;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,.48);
+  font-family: Arial, sans-serif;
+}
+.aviso-caja {
+  width: min(440px, calc(100vw - 36px));
+  padding: 20px;
+  box-sizing: border-box;
+  background: #f7f7f7;
+  color: #222;
+  border: 1px solid #c7c7c7;
+  border-radius: 8px;
+  box-shadow: 0 12px 40px rgba(0,0,0,.4);
+}
+.aviso-titulo { margin-bottom: 14px; font-size: 14px; font-weight: 600; }
+.aviso-texto { font-size: 14px; line-height: 1.5; }
+.aviso-acciones { display: flex; justify-content: flex-end; margin-top: 20px; }
+.aviso-acciones button { border-radius: 5px; background: #dce8f8; color: #222; }
+
+#pantalla-glitch {
+  z-index: 540;
+  overflow: hidden;
+  background: #000;
+}
+.glitch-punto {
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  animation: punto-parpadea .45s steps(2,end) infinite alternate;
+}
+@keyframes punto-parpadea { from { opacity: .25; } to { opacity: 1; } }
+
+@media (max-width: 600px) {
+  #acceso-secreto-zona { top: auto; bottom: 5%; right: 3%; transform: scale(.85); transform-origin: bottom right; }
+  .chat-burbuja { max-width: 88%; }
+  #chat-opciones { max-height: 40vh; }
+}
+
+</style>
 </head>
 <body>
 
@@ -935,7 +1225,7 @@ function aplicarColorBarra(color) {
 // botones
 barraLateral.innerHTML = `
   <button data-btn="ajustes">⚙</button>
-  <button data-btn="juegos">🕹</button>
+  <button data-btn="juegos">🎧</button>
   <button data-btn="info">?</button>
 `;
 
@@ -997,12 +1287,12 @@ function abrirAjustes() {
 // ===============================
 function abrirJuegos() {
   crearVentana(`
-    <h3>Minijuegos</h3>
-    <p>Próximamente:</p>
+    <h3>Stray Bullet</h3>
+    <p>Escucha las canciones de a banda y sus tracks(PRONTO):</p>
     <ul style="text-align:left">
-      <li>Metal Coffee</li>
-      <li>Club de Arte</li>
-      <li>Rock 'N Roll</li>
+      <li>....</li>
+      <li>....</li>
+      <li>....</li>
     </ul>
   `);
 }
@@ -1033,6 +1323,374 @@ elegirPerfil = function(p) {
   elegirPerfilOriginal(p);
   actualizarBarraLateral();
 };
+
+
+
+// ==============================================
+// ACCESO SECRETO PARA OLIVER — NÉMUR
+// ==============================================
+const CODIGO_CHAT_NEMUR = "HVISWATCHING";
+const MUSICAFONDO566_URL = "https://raw.githubusercontent.com/Kiwifl1p/Piano-lulllaby-by-kiwi/refs/heads/main/Piano%20Lullaby.mp3";
+const IMAGEN_RUTA2_URL = "https://i.imgur.com/KvJgz7e_d.png?maxwidth=520&shape=thumb&fidelity=high";
+// MAÑANA: pegá aquí el enlace directo de SECRETRECORDING1, entre las comillas.
+const SECRETRECORDING1_URL = "";
+
+// Estas variables viven solamente mientras la página siga abierta.
+// Al refrescar, se reinician automáticamente: no usamos localStorage.
+let rutaElegidaEnEstaSesion = false;
+let dejavuPendiente = false;
+let dejavuYaMostrado = false;
+let audioRuta2 = null;
+let audioSecreto = null;
+let temporizadorAvisoRuta2 = null;
+
+// Zona invisible que revela el botón rojo al pasar el mouse.
+const zonaAccesoSecreto = document.createElement("div");
+zonaAccesoSecreto.id = "acceso-secreto-zona";
+zonaAccesoSecreto.innerHTML = `
+  <img id="acceso-secreto-boton"
+       src="https://tse3.mm.bing.net/th/id/OIP.sJ5M9B8euBhg1qnKzlm63AHaIC?r=0&pid=Api&h=220&P=0"
+       alt="Botón rojo">
+`;
+zonaAccesoSecreto.addEventListener("click", abrirVentanaPassword);
+document.body.appendChild(zonaAccesoSecreto);
+
+function actualizarAccesoSecreto() {
+  zonaAccesoSecreto.style.display = perfil === "oliver" ? "block" : "none";
+}
+actualizarAccesoSecreto();
+
+// Se suma a la función de perfiles existente sin reemplazar su comportamiento.
+const elegirPerfilConAccesoOriginal = elegirPerfil;
+elegirPerfil = function(p) {
+  elegirPerfilConAccesoOriginal(p);
+  actualizarAccesoSecreto();
+};
+
+function abrirVentanaPassword() {
+  if (perfil !== "oliver" || document.getElementById("password-overlay") || document.getElementById("chat-nemur")) return;
+
+  const overlay = document.createElement("div");
+  overlay.id = "password-overlay";
+  overlay.innerHTML = `
+    <div class="password-ventana">
+      <button class="password-cerrar" type="button" aria-label="Cerrar">×</button>
+      <h2>Introduzca contraseña</h2>
+      <input id="password-input" type="password" autocomplete="off" spellcheck="false">
+      <button id="password-enviar" type="button">Ingresar</button>
+      <p id="password-error"></p>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+
+  const cerrar = () => overlay.remove();
+  overlay.querySelector(".password-cerrar").addEventListener("click", cerrar);
+  const input = overlay.querySelector("#password-input");
+  const enviar = overlay.querySelector("#password-enviar");
+
+  function comprobarPassword() {
+    if (overlay.classList.contains("transicion-negra")) return;
+    if (input.value === CODIGO_CHAT_NEMUR) {
+      input.disabled = true;
+      enviar.disabled = true;
+      overlay.classList.add("transicion-negra");
+      setTimeout(() => {
+        overlay.remove();
+        abrirChatNemur();
+      }, 4000);
+    } else {
+      const error = overlay.querySelector("#password-error");
+      error.textContent = "Esa no es la contraseña:";
+      clearTimeout(error._timeout);
+      error._timeout = setTimeout(() => { error.textContent = ""; }, 3000);
+    }
+  }
+
+  enviar.addEventListener("click", comprobarPassword);
+  input.addEventListener("keydown", e => { if (e.key === "Enter") comprobarPassword(); });
+  input.focus();
+}
+
+function abrirChatNemur() {
+  if (document.getElementById("chat-nemur")) return;
+  const chat = document.createElement("section");
+  chat.id = "chat-nemur";
+  chat.innerHTML = `
+    <header class="chat-cabecera">
+      <div class="chat-avatar" aria-hidden="true"></div>
+      <div class="chat-identidad">
+        <div class="chat-nombre">desconocido</div>
+        <div id="chat-estado">en línea</div>
+      </div>
+      <button class="chat-cerrar" type="button" aria-label="Volver al menú">×</button>
+    </header>
+    <main id="chat-mensajes" aria-live="polite"></main>
+    <footer id="chat-opciones"></footer>
+  `;
+  document.body.appendChild(chat);
+  chat.querySelector(".chat-cerrar").addEventListener("click", cerrarChatConX);
+
+  if (dejavuPendiente && !dejavuYaMostrado) {
+    dejavuPendiente = false;
+    dejavuYaMostrado = true;
+    mostrarMensajeDesconocido("Acabo de tener un déjà vu....", 3000, () => {
+      // PUNTO DE INSERCIÓN: aquí se añadirán las opciones y los mensajes
+      // de la RUTA ESPECIAL cuando Glen proporcione su contenido.
+      activarZonaRutaEspecialPendiente();
+    });
+  } else {
+    mostrarOpcionesIniciales();
+  }
+}
+
+function obtenerChat() { return document.getElementById("chat-nemur"); }
+function agregarMensaje(quien, texto) {
+  const lista = document.getElementById("chat-mensajes");
+  if (!lista) return;
+  const fila = document.createElement("div");
+  fila.className = "chat-fila " + (quien === "jugador" ? "jugador" : "desconocido");
+  const burbuja = document.createElement("div");
+  burbuja.className = "chat-burbuja";
+  burbuja.textContent = texto;
+  fila.appendChild(burbuja);
+  lista.appendChild(fila);
+  lista.scrollTop = lista.scrollHeight;
+}
+function establecerEstado(texto) {
+  const estado = document.getElementById("chat-estado");
+  if (estado) estado.textContent = texto;
+}
+function limpiarOpciones() {
+  const opciones = document.getElementById("chat-opciones");
+  if (opciones) opciones.innerHTML = "";
+}
+function agregarOpcion(texto, accion) {
+  const opciones = document.getElementById("chat-opciones");
+  if (!opciones) return;
+  const boton = document.createElement("button");
+  boton.type = "button";
+  boton.textContent = texto;
+  boton.addEventListener("click", () => {
+    if (boton.disabled) return;
+    limpiarOpciones();
+    agregarMensaje("jugador", texto.replace(/^\d+\s*[—.-]\s*/, ""));
+    accion();
+  });
+  opciones.appendChild(boton);
+}
+function mostrarMensajeDesconocido(texto, demora = 3000, alTerminar = null) {
+  limpiarOpciones();
+  establecerEstado("escribiendo...");
+  setTimeout(() => {
+    if (!obtenerChat()) return;
+    agregarMensaje("desconocido", texto);
+    establecerEstado("en línea");
+    if (alTerminar) alTerminar();
+  }, demora);
+}
+function mostrarOpcionesIniciales() {
+  agregarOpcion("3 — ¿Eres HV?", ruta3);
+  agregarOpcion("2 — ¿Alguna vez te adentraste al bosque?", ruta2);
+  agregarOpcion("1 — Dame información.", ruta1);
+  agregarOpcion("4 — ¿Cuál es tu personaje favorito?", ruta4);
+}
+function cerrarChatConX() {
+  if (rutaElegidaEnEstaSesion && !dejavuYaMostrado) dejavuPendiente = true;
+  const chat = obtenerChat();
+  if (chat) chat.remove();
+}
+function activarZonaRutaEspecialPendiente() {
+  // El contacto ya reconoció al jugador. Falta incorporar aquí el diálogo
+  // y las elecciones de la ruta especial cuando estén escritos.
+  const opciones = document.getElementById("chat-opciones");
+  if (opciones) {
+    const nota = document.createElement("div");
+    nota.className = "chat-fin";
+    nota.textContent = "";
+    opciones.appendChild(nota);
+  }
+}
+
+// RUTA 1 — Dame información.
+function ruta1() {
+  rutaElegidaEnEstaSesion = true;
+  mostrarMensajeDesconocido(
+    "No le creas, a nadie, Nadie está sano realmente, nadie es verdaderamente santo. Algunos sólo ocultan su putrefacto cuerpo en una piel que brilla más que el sol en verano. No le creas a nadie, huye sin adentrarte al bosque.",
+    3000,
+    () => agregarOpcion("¿Qué significa?", () => {
+      mostrarMensajeDesconocido("Que la lucha recíen comienza.", 3000, () => {
+        const opciones = document.getElementById("chat-opciones");
+        if (opciones) opciones.innerHTML = '<div class="chat-fin">FIN DEL CHAT</div>';
+      });
+    })
+  );
+}
+
+// RUTA 2 — El bosque.
+function ruta2() {
+  rutaElegidaEnEstaSesion = true;
+  mostrarMensajeDesconocido("¿Lo has estado tú?", 3000, () => {
+    agregarOpcion("Sí", eventoBosqueSi);
+    agregarOpcion("No", eventoBosqueNo);
+  });
+}
+function eventoBosqueNo() {
+  mostrarMensajeDesconocido(
+    "Es mejor mantenerse lejos, nunca es seguro, mucho menos cuando es fin de mes.",
+    3000,
+    () => {
+      setTimeout(() => {
+        if (obtenerChat()) establecerEstado("desconectado");
+        const opciones = document.getElementById("chat-opciones");
+        if (opciones) opciones.innerHTML = '<div class="chat-fin"> </div>';
+      }, 3000);
+    }
+  );
+}
+function eventoBosqueSi() {
+  mostrarMensajeDesconocido("....", 3000, () => {
+    const chat = obtenerChat();
+    if (chat) chat.remove();
+    mostrarPantallaNegraRuta2();
+  });
+}
+function mostrarPantallaNegraRuta2() {
+  const evento = document.createElement("div");
+  evento.id = "evento-ruta2";
+  document.body.appendChild(evento);
+  setTimeout(() => {
+    if (!document.getElementById("evento-ruta2")) return;
+    const letra = document.createElement("div");
+    letra.id = "ruta2-letra";
+    letra.textContent = "N";
+    evento.appendChild(letra);
+    reproducirMusicaRuta2();
+    const imagen = document.createElement("img");
+    imagen.id = "ruta2-imagen";
+    imagen.src = IMAGEN_RUTA2_URL;
+    imagen.alt = "Imagen misteriosa";
+    imagen.addEventListener("click", mostrarAvisoFalso);
+    evento.appendChild(imagen);
+  }, 5000);
+}
+function reproducirMusicaRuta2() {
+  try {
+    if (audioRuta2) { audioRuta2.pause(); audioRuta2 = null; }
+    audioRuta2 = new Audio();
+    audioRuta2.crossOrigin = "anonymous";
+    audioRuta2.src = MUSICAFONDO566_URL;
+    audioRuta2.loop = true;
+    audioRuta2.volume = 1;
+
+    // Efecto de saturación/distorsión para darle un sonido más inquietante.
+    const AudioContextRuta2 = window.AudioContext || window.webkitAudioContext;
+    if (AudioContextRuta2) {
+      const contexto = new AudioContextRuta2();
+      const fuente = contexto.createMediaElementSource(audioRuta2);
+      const distorsion = contexto.createWaveShaper();
+      const cantidad = 260;
+      const curva = new Float32Array(44100);
+      for (let i = 0; i < curva.length; i++) {
+        const x = (i * 2) / curva.length - 1;
+        curva[i] = ((3 + cantidad) * x * 20 * Math.PI / 180) / (Math.PI + cantidad * Math.abs(x));
+      }
+      distorsion.curve = curva;
+      distorsion.oversample = "4x";
+      fuente.connect(distorsion);
+      distorsion.connect(contexto.destination);
+      contexto.resume().catch(() => {});
+    }
+    audioRuta2.play().catch(err => console.warn("El navegador bloqueó la reproducción automática:", err));
+  } catch (e) {
+    console.warn("No se pudo aplicar la saturación; se intentará reproducir el audio normal.", e);
+    try {
+      if (audioRuta2) audioRuta2.play().catch(() => {});
+    } catch (_) {}
+  }
+}
+function mostrarAvisoFalso() {
+  if (document.getElementById("aviso-falso")) return;
+  const aviso = document.createElement("div");
+  aviso.id = "aviso-falso";
+  aviso.innerHTML = `
+    <div class="aviso-caja">
+      <div class="aviso-titulo">La página no responde</div>
+      <div class="aviso-texto">La página a dejado de responder, recarga la página o en 10 segundos la página se romperá.</div>
+      <div class="aviso-acciones"><button type="button" id="recargar-ruta2">Recargar página</button></div>
+    </div>
+  `;
+  document.body.appendChild(aviso);
+  aviso.querySelector("#recargar-ruta2").addEventListener("click", () => window.location.reload());
+  temporizadorAvisoRuta2 = setTimeout(() => {
+    if (!document.getElementById("aviso-falso")) return;
+    aviso.remove();
+    iniciarGlitchRuta2();
+  }, 10000);
+}
+function iniciarGlitchRuta2() {
+  // Al comenzar la pantalla de puntos, se corta la música saturada
+  // para que SECRETRECORDING1 pueda escucharse con claridad.
+  if (audioRuta2) {
+    audioRuta2.pause();
+    audioRuta2.currentTime = 0;
+    audioRuta2 = null;
+  }
+
+  const glitch = document.createElement("div");
+  glitch.id = "pantalla-glitch";
+  document.body.appendChild(glitch);
+  const colores = ["#ff1744", "#00e5ff", "#ffea00", "#76ff03", "#d500f9", "#ffffff", "#ff9100"];
+  for (let i = 0; i < 420; i++) {
+    const punto = document.createElement("span");
+    punto.className = "glitch-punto";
+    punto.style.left = Math.random() * 100 + "%";
+    punto.style.top = Math.random() * 100 + "%";
+    punto.style.background = colores[Math.floor(Math.random() * colores.length)];
+    punto.style.width = (2 + Math.random() * 7) + "px";
+    punto.style.height = (2 + Math.random() * 7) + "px";
+    punto.style.animationDelay = (Math.random() * .5) + "s";
+    glitch.appendChild(punto);
+  }
+  // El enlace se completará cuando Glen envíe SECRETRECORDING1.
+  if (SECRETRECORDING1_URL.trim()) {
+    audioSecreto = new Audio(SECRETRECORDING1_URL.trim());
+    audioSecreto.loop = false;
+    audioSecreto.volume = 1;
+    audioSecreto.play().catch(err => console.warn("No se pudo reproducir SECRETRECORDING1:", err));
+  }
+}
+
+// RUTA 3 — ¿Eres HV?
+function ruta3() {
+  rutaElegidaEnEstaSesion = true;
+  mostrarMensajeDesconocido("....", 3000, () => {
+    setTimeout(() => {
+      if (!obtenerChat()) return;
+      agregarMensaje("jugador", "....");
+      setTimeout(() => {
+        const chat = obtenerChat();
+        if (chat) chat.remove();
+        // El cierre automático de esta ruta NO activa el déjà vu:
+        // solamente lo activa cerrar con la X.
+      }, 850);
+    }, 650);
+  });
+}
+
+// RUTA 4 — Personaje favorito.
+function ruta4() {
+  rutaElegidaEnEstaSesion = true;
+  mostrarMensajeDesconocido(
+    "Amo a cada personaje por igual, siento que cada uno tiene un transfondo que permite entender su personalidad, algunos duelen más dolorosos que otros, pero de los mejores, diría que la vigilante es de las mejores, no es que me encante, es que es de los mejores personajes, simplemente eso, ¿sabes?, no se puede explicar cuan bello es ese personaje. Y después está Everly.",
+    4000,
+    () => agregarOpcion("¿Es tu personaje favorito por algo peculiar?", () => {
+      mostrarMensajeDesconocido("Lo verás más adelante:", 3000, () => {
+        const opciones = document.getElementById("chat-opciones");
+        if (opciones) opciones.innerHTML = '<div class="chat-fin">FIN DEL CHAT</div>';
+      });
+    })
+  );
+}
 
 </script>
 </body>

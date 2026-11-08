@@ -428,6 +428,121 @@ button:active { background: #55cc7a; }
   #chat-opciones { max-height: 40vh; }
 }
 
+
+/* ===============================
+   EXPERIMENTO DEL CASSETTE
+   =============================== */
+#cassette-capturable {
+  position: absolute; z-index: 545; width: 94px; height: 76px;
+  padding: 0; border: 0; border-radius: 0; background: transparent;
+  opacity: .16; transition: opacity .08s linear, left .32s ease-out, top .32s ease-out, transform .32s linear; cursor: crosshair;
+  touch-action: manipulation;
+}
+#cassette-capturable:hover, #cassette-capturable:focus-visible { opacity: 1; }
+#cassette-capturable img {
+  display: block; width: 100%; height: 100%; object-fit: contain; pointer-events: none;
+}
+#experimento-password, #cassette-experimento, #llamada-nemur {
+  position: fixed; inset: 0; z-index: 560; font-family: Arial, sans-serif;
+}
+#experimento-password {
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(0,0,0,.96); color: #eee;
+}
+.experimento-password-caja {
+  position: relative; width: min(410px, calc(100vw - 36px));
+  padding: 42px 28px 28px; box-sizing: border-box;
+  background: #1c1c1c; border: 1px solid #555; text-align: center;
+  box-shadow: 0 12px 45px rgba(0,0,0,.6);
+}
+.experimento-password-caja h2 { margin: 0 0 22px; font-size: 18px; font-weight: 500; }
+.experimento-password-caja input {
+  width: 100%; box-sizing: border-box; padding: 12px; color: #eee;
+  background: #090909; border: 1px solid #666; outline: none;
+}
+.experimento-password-caja button:not(.experimento-cerrar) { margin-top: 15px; }
+.experimento-cerrar, .cassette-salir {
+  position: absolute; z-index: 5; top: 13px; right: 17px;
+  padding: 4px 9px; background: transparent; color: white; font-size: 27px; line-height: 1;
+}
+#experimento-password-error { min-height: 18px; margin: 14px 0 0; color: #ff3d3d; font-size: 13px; }
+#cassette-experimento {
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden; background: #000;
+}
+.cassette-imagen {
+  display: block; max-width: 100vw; max-height: 100vh;
+  width: 100%; height: 100%; object-fit: contain; cursor: pointer;
+  user-select: none; -webkit-user-drag: none;
+}
+.cassette-salir { position: fixed; }
+#cinta-arrastre-zona {
+  position: absolute; left: 50%; top: 50%; width: min(76vw, 760px); height: 170px;
+  transform: translate(-50%, -50%); display: flex; align-items: center;
+  justify-content: center; cursor: grab; touch-action: none;
+}
+#cinta-arrastre-zona:active { cursor: grabbing; }
+#cinta-simulada {
+  position: relative; width: 100%; height: 17px;
+  border-top: 2px solid #393939; border-bottom: 2px solid #242424;
+  background: repeating-linear-gradient(90deg, #101010 0 17px, #1b1b1b 17px 20px, #0b0b0b 20px 38px);
+  box-shadow: 0 0 9px rgba(255,255,255,.08); transform: rotate(-13deg);
+}
+#cinta-simulada::before, #cinta-simulada::after {
+  content: ""; position: absolute; top: -9px; width: 34px; height: 31px;
+  border: 2px solid #303030; border-radius: 50%; background: #080808;
+}
+#cinta-simulada::before { left: 9%; }
+#cinta-simulada::after { right: 9%; }
+#nota-numero {
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+  background: rgba(0,0,0,.28); opacity: 0; pointer-events: none; transition: opacity .35s ease;
+}
+#nota-numero.visible { opacity: 1; }
+.nota-numero-texto {
+  width: min(310px, 72vw); min-height: 190px; display: flex;
+  align-items: center; justify-content: center; box-sizing: border-box; padding: 30px;
+  background: #f4f1e9; color: #171717; box-shadow: 0 8px 30px rgba(0,0,0,.55);
+  font-family: "Courier New", monospace; font-size: clamp(34px, 8vw, 52px);
+  letter-spacing: 7px; transform: rotate(-2deg);
+}
+#llamada-nemur {
+  display: flex; align-items: center; justify-content: center;
+  background: radial-gradient(ellipse at center, #343434 0%, #111 72%, #050505 100%);
+  color: white; font-family: Arial, sans-serif;
+}
+.llamada-contenido {
+  width: min(340px, calc(100vw - 38px)); display: flex;
+  flex-direction: column; align-items: center; gap: 18px;
+}
+.llamada-contacto { font-size: 23px; letter-spacing: 1px; }
+#llamada-estado { min-height: 17px; color: #bcbcbc; font-size: 12px; }
+#llamada-numero {
+  width: 100%; min-height: 34px; text-align: center; font-size: 27px;
+  letter-spacing: 8px; border-bottom: 1px solid #555;
+}
+.llamada-teclado {
+  display: grid; grid-template-columns: repeat(3, 68px); gap: 12px 17px; justify-content: center;
+}
+.llamada-teclado button {
+  width: 68px; height: 58px; padding: 0; border-radius: 50%;
+  background: rgba(255,255,255,.12); color: white; font-size: 22px;
+}
+#llamada-colgar {
+  width: 68px; height: 58px; padding: 0; border-radius: 30px;
+  background: #4b4b4b; color: #999; font-size: 26px; cursor: not-allowed;
+}
+#llamada-colgar.habilitado { background: #c52d36; color: white; cursor: pointer; }
+.chat-llamar {
+  flex: 0 0 auto; padding: 7px 9px; background: transparent;
+  color: white; font-size: 25px; line-height: 1;
+}
+@media (hover: none) { #cassette-capturable { opacity: .3; } }
+@media (max-width: 600px) {
+  #cinta-arrastre-zona { width: 88vw; height: 145px; }
+  .llamada-teclado { gap: 10px 13px; }
+}
+
 </style>
 </head>
 <body>
@@ -757,7 +872,7 @@ function crearPersonajeConSonido({
   img.onclick = () => {
     audio.currentTime = 0; // reinicia el sonido
     audio.play();
-   alert("RKseries");
+   alert("EXPERIMENT016");
   };
 
   document.body.appendChild(img);
@@ -1288,7 +1403,7 @@ function abrirAjustes() {
 function abrirJuegos() {
   crearVentana(`
     <h3>Stray Bullet</h3>
-    <p>Escucha las canciones de a banda y sus tracks(PRONTO):</p>
+    <p>Escucha las canciones de la banda y sus tracks(PRONTO):</p>
     <ul style="text-align:left">
       <li>....</li>
       <li>....</li>
@@ -1332,8 +1447,16 @@ elegirPerfil = function(p) {
 const CODIGO_CHAT_NEMUR = "HVISWATCHING";
 const MUSICAFONDO566_URL = "https://raw.githubusercontent.com/Kiwifl1p/Piano-lulllaby-by-kiwi/refs/heads/main/Piano%20Lullaby.mp3";
 const IMAGEN_RUTA2_URL = "https://i.imgur.com/KvJgz7e_d.png?maxwidth=520&shape=thumb&fidelity=high";
-// MAÑANA: pegá aquí el enlace directo de SECRETRECORDING1, entre las comillas.
-const SECRETRECORDING1_URL = "";
+// Recursos del experimento del cassette.
+const CONTRASENA_EXPERIMENTO = "EXPERIMENT016";
+const CODIGO_LLAMADA = "677786";
+const BOTON_CASSETTE_URL = "https://i.imgur.com/wUDDg9w_d.jpeg?maxwidth=520&shape=thumb&fidelity=high";
+const CASSETTE01_URL = "https://i.imgur.com/Z18YG86_d.jpeg?maxwidth=520&shape=thumb&fidelity=high";
+const CASSETTE02_URL = "https://i.imgur.com/Xz7C15U_d.jpeg?maxwidth=520&shape=thumb&fidelity=high";
+const CASSETTE03_URL = "https://i.imgur.com/VZr3Xn9_d.jpeg?maxwidth=520&shape=thumb&fidelity=high";
+const SECRETRECORDING1_URL = "https://raw.githubusercontent.com/Kiwifl1p/secretrecordingprivateproject/refs/heads/main/WhatsApp%20Audio%202026-11-08%20at%2011.55.54.mp4";
+const DESCONOCIDO01_URL = "https://raw.githubusercontent.com/Kiwifl1p/telefon-ajskjaksdj/refs/heads/main/WhatsApp%20Audio%202026-11-08%20at%2015.03.24.mpeg";
+const DESCONOCIDO02_URL = "https://raw.githubusercontent.com/Kiwifl1p/idk-secrettoo/refs/heads/main/WhatsApp%20Audio%202026-11-08%20at%2013.50.57.mp4";
 
 // Estas variables viven solamente mientras la página siga abierta.
 // Al refrescar, se reinician automáticamente: no usamos localStorage.
@@ -1342,7 +1465,12 @@ let dejavuPendiente = false;
 let dejavuYaMostrado = false;
 let audioRuta2 = null;
 let audioSecreto = null;
+let audioLlamada01 = null;
+let audioLlamada02 = null;
 let temporizadorAvisoRuta2 = null;
+let temporizadorCassette = null;
+let secretRecordingPlayed = false;
+let llamadaDesbloqueada = false;
 
 // Zona invisible que revela el botón rojo al pasar el mouse.
 const zonaAccesoSecreto = document.createElement("div");
@@ -1422,6 +1550,7 @@ function abrirChatNemur() {
         <div class="chat-nombre">desconocido</div>
         <div id="chat-estado">en línea</div>
       </div>
+      ${llamadaDesbloqueada ? '<button class="chat-llamar" id="chat-llamar" type="button" aria-label="Llamar al desconocido">✆</button>' : ''}
       <button class="chat-cerrar" type="button" aria-label="Volver al menú">×</button>
     </header>
     <main id="chat-mensajes" aria-live="polite"></main>
@@ -1429,6 +1558,8 @@ function abrirChatNemur() {
   `;
   document.body.appendChild(chat);
   chat.querySelector(".chat-cerrar").addEventListener("click", cerrarChatConX);
+  const botonLlamar = chat.querySelector("#chat-llamar");
+  if (botonLlamar) botonLlamar.addEventListener("click", abrirPantallaLlamada);
 
   if (dejavuPendiente && !dejavuYaMostrado) {
     dejavuPendiente = false;
@@ -1489,10 +1620,10 @@ function mostrarMensajeDesconocido(texto, demora = 3000, alTerminar = null) {
   }, demora);
 }
 function mostrarOpcionesIniciales() {
-  agregarOpcion("3 — ¿Eres HV?", ruta3);
-  agregarOpcion("2 — ¿Alguna vez te adentraste al bosque?", ruta2);
-  agregarOpcion("1 — Dame información.", ruta1);
-  agregarOpcion("4 — ¿Cuál es tu personaje favorito?", ruta4);
+  agregarOpcion("¿Eres HV?", ruta3);
+  agregarOpcion("¿Alguna vez te adentraste al bosque?", ruta2);
+  agregarOpcion("Dame información.", ruta1);
+  agregarOpcion("¿Cuál es tu personaje favorito?", ruta4);
 }
 function cerrarChatConX() {
   if (rutaElegidaEnEstaSesion && !dejavuYaMostrado) dejavuPendiente = true;
@@ -1518,7 +1649,7 @@ function ruta1() {
     "No le creas, a nadie, Nadie está sano realmente, nadie es verdaderamente santo. Algunos sólo ocultan su putrefacto cuerpo en una piel que brilla más que el sol en verano. No le creas a nadie, huye sin adentrarte al bosque.",
     3000,
     () => agregarOpcion("¿Qué significa?", () => {
-      mostrarMensajeDesconocido("Que la lucha recíen comienza.", 3000, () => {
+      mostrarMensajeDesconocido("Que la lucha recién comienza.", 3000, () => {
         const opciones = document.getElementById("chat-opciones");
         if (opciones) opciones.innerHTML = '<div class="chat-fin">FIN DEL CHAT</div>';
       });
@@ -1628,8 +1759,6 @@ function mostrarAvisoFalso() {
   }, 10000);
 }
 function iniciarGlitchRuta2() {
-  // Al comenzar la pantalla de puntos, se corta la música saturada
-  // para que SECRETRECORDING1 pueda escucharse con claridad.
   if (audioRuta2) {
     audioRuta2.pause();
     audioRuta2.currentTime = 0;
@@ -1651,13 +1780,305 @@ function iniciarGlitchRuta2() {
     punto.style.animationDelay = (Math.random() * .5) + "s";
     glitch.appendChild(punto);
   }
-  // El enlace se completará cuando Glen envíe SECRETRECORDING1.
-  if (SECRETRECORDING1_URL.trim()) {
-    audioSecreto = new Audio(SECRETRECORDING1_URL.trim());
+
+  const boton = document.createElement("button");
+  boton.id = "cassette-capturable";
+  boton.type = "button";
+  boton.setAttribute("aria-label", "Capturar cassette");
+  boton.innerHTML = `<img src="${BOTON_CASSETTE_URL}" alt="">`;
+  glitch.appendChild(boton);
+
+  function moverCassette() {
+    if (!boton.isConnected) return;
+    const margenX = Math.max(0, window.innerWidth - boton.offsetWidth);
+    const margenY = Math.max(0, window.innerHeight - boton.offsetHeight);
+    boton.style.left = Math.random() * margenX + "px";
+    boton.style.top = Math.random() * margenY + "px";
+    boton.style.transform = `rotate(${Math.round(Math.random() * 34 - 17)}deg)`;
+  }
+  moverCassette();
+  temporizadorCassette = setInterval(moverCassette, 790);
+  boton.addEventListener("click", () => {
+    clearInterval(temporizadorCassette);
+    temporizadorCassette = null;
+    boton.remove();
+    abrirPasswordExperimento();
+  });
+}
+
+// Contraseña del cassette.
+function abrirPasswordExperimento() {
+  if (document.getElementById("experimento-password")) return;
+  const overlay = document.createElement("div");
+  overlay.id = "experimento-password";
+  overlay.innerHTML = `
+    <div class="experimento-password-caja">
+      <button class="experimento-cerrar" type="button" aria-label="Volver al inicio">×</button>
+      <h2>Introduzca su contraseña</h2>
+      <input id="experimento-password-input" type="password" autocomplete="off" spellcheck="false">
+      <button id="experimento-password-enviar" type="button">Ingresar</button>
+      <p id="experimento-password-error"></p>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+  overlay.querySelector(".experimento-cerrar").addEventListener("click", volverMenuPrincipalExperimento);
+  const input = overlay.querySelector("#experimento-password-input");
+  const enviar = overlay.querySelector("#experimento-password-enviar");
+  const error = overlay.querySelector("#experimento-password-error");
+  function comprobar() {
+    if (input.value === CONTRASENA_EXPERIMENTO) {
+      input.disabled = true;
+      enviar.disabled = true;
+      mostrarCassette01();
+    } else {
+      error.textContent = "Contraseña incorrecta, inténtelo de nuevo";
+      clearTimeout(error._timeout);
+      error._timeout = setTimeout(() => { error.textContent = ""; }, 3000);
+    }
+  }
+  enviar.addEventListener("click", comprobar);
+  input.addEventListener("keydown", e => { if (e.key === "Enter") comprobar(); });
+  input.focus();
+}
+
+function crearPantallaCassette(contenido) {
+  let pantalla = document.getElementById("cassette-experimento");
+  if (!pantalla) {
+    pantalla = document.createElement("div");
+    pantalla.id = "cassette-experimento";
+    document.body.appendChild(pantalla);
+  }
+  pantalla.innerHTML = contenido;
+  return pantalla;
+}
+function botonCerrarExperimentoHTML() {
+  return '<button class="cassette-salir" type="button" aria-label="Volver al menú principal">×</button>';
+}
+function mostrarCassette01() {
+  const password = document.getElementById("experimento-password");
+  if (password) password.remove();
+  const pantalla = crearPantallaCassette(`
+    ${botonCerrarExperimentoHTML()}
+    <img id="cassette01-imagen" class="cassette-imagen" src="${CASSETTE01_URL}" alt="Cassette">
+  `);
+  pantalla.querySelector(".cassette-salir").addEventListener("click", volverMenuPrincipalExperimento);
+  pantalla.querySelector("#cassette01-imagen").addEventListener("click", mostrarCassette02);
+}
+function mostrarCassette02() {
+  const pantalla = document.getElementById("cassette-experimento");
+  if (!pantalla || pantalla.dataset.cambiandoCassette === "true") return;
+
+  // Precargamos la segunda imagen antes de sustituir la primera para evitar
+  // que se vea el fondo negro durante la carga.
+  pantalla.dataset.cambiandoCassette = "true";
+  const imagenPrecargada = new Image();
+  const cambiarImagen = () => {
+    if (!pantalla.isConnected) return;
+    pantalla.innerHTML = `
+      ${botonCerrarExperimentoHTML()}
+      <img id="cassette02-imagen" class="cassette-imagen" src="${CASSETTE02_URL}" alt="Cassette cerrado">
+    `;
+    pantalla.dataset.cambiandoCassette = "false";
+    pantalla.querySelector(".cassette-salir").addEventListener("click", volverMenuPrincipalExperimento);
+
+    if (secretRecordingPlayed) {
+      // Si ya se reprodujo una vez en esta sesión, no vuelve a sonar.
+      mostrarCassette03();
+      return;
+    }
+    secretRecordingPlayed = true;
+    if (audioSecreto) {
+      audioSecreto.pause();
+      audioSecreto.currentTime = 0;
+    }
+    audioSecreto = new Audio(SECRETRECORDING1_URL);
     audioSecreto.loop = false;
     audioSecreto.volume = 1;
-    audioSecreto.play().catch(err => console.warn("No se pudo reproducir SECRETRECORDING1:", err));
+    let cassetteAvanzado = false;
+    const avanzarAlCassetteDañado = () => {
+      if (cassetteAvanzado) return;
+      cassetteAvanzado = true;
+      mostrarCassette03();
+    };
+
+    // Mostrar cassette03 cuando resten aproximadamente 8 segundos,
+    // dejando que la grabación continúe durante esa transición.
+    audioSecreto.addEventListener("timeupdate", () => {
+      if (Number.isFinite(audioSecreto.duration) &&
+          audioSecreto.duration - audioSecreto.currentTime <= 8) {
+        avanzarAlCassetteDañado();
+      }
+    });
+    audioSecreto.addEventListener("loadedmetadata", () => {
+      if (Number.isFinite(audioSecreto.duration) && audioSecreto.duration <= 2) {
+        avanzarAlCassetteDañado();
+      }
+    }, { once: true });
+    audioSecreto.onended = avanzarAlCassetteDañado;
+    audioSecreto.onerror = avanzarAlCassetteDañado;
+    audioSecreto.play().catch(err => {
+      console.warn("No se pudo reproducir SECRETRECORDING1:", err);
+      avanzarAlCassetteDañado();
+    });
+  };
+  imagenPrecargada.onload = cambiarImagen;
+  imagenPrecargada.onerror = () => {
+    // Si el servidor no permite precargar, intentamos mostrarla igualmente.
+    cambiarImagen();
+  };
+  imagenPrecargada.src = CASSETTE02_URL;
+}
+function mostrarCassette03() {
+  if (!document.getElementById("cassette-experimento")) return;
+  const pantalla = crearPantallaCassette(`
+    ${botonCerrarExperimentoHTML()}
+    <img id="cassette03-imagen" class="cassette-imagen cassette03-imagen" src="${CASSETTE03_URL}" alt="Cassette con la cinta enredada">
+    <div class="cassette-pista"></div>
+  `);
+  pantalla.querySelector(".cassette-salir").addEventListener("click", volverMenuPrincipalExperimento);
+  // La imagen completa funciona como zona de selección para que sea fácil tocarla en móvil.
+  pantalla.querySelector("#cassette03-imagen").addEventListener("click", mostrarCintaParaArrastrar);
+}
+function mostrarCintaParaArrastrar() {
+  const pantalla = crearPantallaCassette(`
+    ${botonCerrarExperimentoHTML()}
+    <div id="cinta-arrastre-zona" role="button" aria-label="Mantener y deslizar sobre la cinta">
+      <div id="cinta-simulada"></div>
+    </div>
+    <div id="nota-numero" aria-live="polite">
+      <div class="nota-numero-texto">677786</div>
+    </div>
+  `);
+  pantalla.querySelector(".cassette-salir").addEventListener("click", volverMenuPrincipalExperimento);
+  const zona = pantalla.querySelector("#cinta-arrastre-zona");
+  let arrastrando = false, inicioX = 0, inicioY = 0, distancia = 0, revelada = false;
+  zona.addEventListener("pointerdown", e => {
+    arrastrando = true;
+    inicioX = e.clientX;
+    inicioY = e.clientY;
+    distancia = 0;
+    zona.setPointerCapture(e.pointerId);
+  });
+  zona.addEventListener("pointermove", e => {
+    if (!arrastrando || revelada) return;
+    distancia += Math.abs(e.clientX - inicioX) + Math.abs(e.clientY - inicioY);
+    inicioX = e.clientX;
+    inicioY = e.clientY;
+    if (distancia > 105) {
+      revelada = true;
+      llamadaDesbloqueada = true;
+      pantalla.querySelector("#nota-numero").classList.add("visible");
+    }
+  });
+  const terminar = () => { arrastrando = false; };
+  zona.addEventListener("pointerup", terminar);
+  zona.addEventListener("pointercancel", terminar);
+}
+
+function volverMenuPrincipalExperimento() {
+  clearInterval(temporizadorCassette);
+  temporizadorCassette = null;
+  clearTimeout(temporizadorAvisoRuta2);
+  ["experimento-password", "cassette-experimento", "llamada-nemur",
+   "pantalla-glitch", "evento-ruta2", "aviso-falso", "chat-nemur"].forEach(id => {
+    const elemento = document.getElementById(id);
+    if (elemento) elemento.remove();
+  });
+  [audioRuta2, audioSecreto, audioLlamada01, audioLlamada02].forEach(audio => {
+    if (audio) {
+      audio.pause();
+      try { audio.currentTime = 0; } catch (_) {}
+    }
+  });
+  audioRuta2 = audioSecreto = audioLlamada01 = audioLlamada02 = null;
+}
+
+// La llamada sólo se habilita después de revelar el número.
+function abrirPantallaLlamada() {
+  if (!llamadaDesbloqueada || document.getElementById("llamada-nemur")) return;
+  const llamada = document.createElement("div");
+  llamada.id = "llamada-nemur";
+  llamada.innerHTML = `
+    <div class="llamada-contenido">
+      <div class="llamada-contacto">desconocido</div>
+      <div id="llamada-estado">llamada en curso...</div>
+      <div id="llamada-numero" aria-live="polite"></div>
+      <div class="llamada-teclado">
+        ${["1","2","3","4","5","6","7","8","9","*","0","#"].map(n => `<button type="button" data-num="${n}">${n}</button>`).join("")}
+      </div>
+      <button id="llamada-colgar" type="button" disabled aria-label="Terminar llamada">☎</button>
+    </div>
+  `;
+  document.body.appendChild(llamada);
+  const pantallaNumero = llamada.querySelector("#llamada-numero");
+  const estado = llamada.querySelector("#llamada-estado");
+  const colgar = llamada.querySelector("#llamada-colgar");
+  let marcado = "", audio02Iniciado = false, audio02Reproducido = false;
+  function actualizarNumero() { pantallaNumero.textContent = marcado; }
+  function iniciarAudio02() {
+    if (!audio02Iniciado || audio02Reproducido || !llamada.isConnected) return;
+    audio02Reproducido = true;
+    estado.textContent = "conectado...";
+    audioLlamada02 = new Audio(DESCONOCIDO02_URL);
+    audioLlamada02.loop = false;
+    audioLlamada02.volume = 1;
+    const habilitarColgar = () => {
+      estado.textContent = "";
+      colgar.disabled = false;
+      colgar.classList.add("habilitado");
+    };
+    audioLlamada02.onended = habilitarColgar;
+    audioLlamada02.onerror = habilitarColgar;
+    audioLlamada02.play().catch(err => {
+      console.warn("No se pudo reproducir desconocido02:", err);
+      habilitarColgar();
+    });
   }
+  function procesarNumero() {
+    if (marcado.length !== CODIGO_LLAMADA.length || audio02Iniciado) return;
+    if (marcado === CODIGO_LLAMADA) {
+      audio02Iniciado = true;
+      estado.textContent = "esperando...";
+      // No interrumpimos desconocido01 al introducir el código.
+      // El segundo audio comienza únicamente cuando termina el primero.
+      if (!audioLlamada01 || audioLlamada01.ended) {
+        iniciarAudio02();
+      }
+    } else {
+      estado.textContent = "contraseña incorrecta";
+      marcado = "";
+      actualizarNumero();
+      setTimeout(() => {
+        if (document.getElementById("llamada-nemur") && !audio02Iniciado) estado.textContent = "";
+      }, 2000);
+    }
+  }
+  llamada.querySelectorAll("[data-num]").forEach(boton => {
+    boton.addEventListener("click", () => {
+      if (audio02Iniciado || marcado.length >= 6) return;
+      marcado += boton.dataset.num;
+      actualizarNumero();
+      procesarNumero();
+    });
+  });
+  colgar.addEventListener("click", () => {
+    if (!colgar.disabled) volverMenuPrincipalExperimento();
+  });
+  audioLlamada01 = new Audio(DESCONOCIDO01_URL);
+  audioLlamada01.loop = false;
+  audioLlamada01.volume = 1;
+  audioLlamada01.onended = () => {
+    if (audio02Iniciado) iniciarAudio02();
+  };
+  audioLlamada01.onerror = () => {
+    if (audio02Iniciado) iniciarAudio02();
+    else estado.textContent = "";
+  };
+  audioLlamada01.play().catch(err => {
+    console.warn("No se pudo reproducir desconocido01:", err);
+    estado.textContent = "";
+    if (audio02Iniciado) iniciarAudio02();
+  });
 }
 
 // RUTA 3 — ¿Eres HV?
@@ -1681,10 +2102,10 @@ function ruta3() {
 function ruta4() {
   rutaElegidaEnEstaSesion = true;
   mostrarMensajeDesconocido(
-    "Amo a cada personaje por igual, siento que cada uno tiene un transfondo que permite entender su personalidad, algunos duelen más dolorosos que otros, pero de los mejores, diría que la vigilante es de las mejores, no es que me encante, es que es de los mejores personajes, simplemente eso, ¿sabes?, no se puede explicar cuan bello es ese personaje. Y después está Everly.",
+    "Amo a cada personaje por igual, siento que cada uno tiene un transfondo que permite entender su personalidad, algunos son mejores que otros, pero de los mejores, diría que la vigilante es de las mejores, no es que me encante, es que es de los mejores personajes, simplemente eso, ¿sabes?, no se puede explicar cuan bello es ese personaje. Y después está Everly.",
     4000,
     () => agregarOpcion("¿Es tu personaje favorito por algo peculiar?", () => {
-      mostrarMensajeDesconocido("Lo verás más adelante:", 3000, () => {
+      mostrarMensajeDesconocido("Lo verás más adelante.", 3000, () => {
         const opciones = document.getElementById("chat-opciones");
         if (opciones) opciones.innerHTML = '<div class="chat-fin">FIN DEL CHAT</div>';
       });
